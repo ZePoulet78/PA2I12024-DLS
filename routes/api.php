@@ -14,6 +14,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//    return $request->user();
+// });
+
+Route::get('/formations', [FormationController::class, 'index']);
+Route::post('/formations', [FormationController::class, 'store']);
+Route::get('/formations/{id}', [FormationController::class, 'show']);
+Route::put('/formations/{id}', [FormationController::class, 'update']);
+Route::delete('/formations/{id}', [FormationController::class, 'destroy']);
+
