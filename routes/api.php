@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FormationController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -21,6 +23,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/formations', [FormationController::class, 'index']);
 Route::post('/formations', [FormationController::class, 'store']);
 Route::get('/formations/{id}', [FormationController::class, 'show']);
-Route::put('/formations/{id}', [FormationController::class, 'update']);
+Route::patch('/formations/{id}', [FormationController::class, 'update']);
 Route::delete('/formations/{id}', [FormationController::class, 'destroy']);
 

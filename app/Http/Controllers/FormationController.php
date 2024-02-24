@@ -5,76 +5,72 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Formation;
 
+
 class FormationController extends Controller
 {
     public function index()
     {
-        // Récupérer toutes les formations depuis la base de données
-        $formations = Formation::all();
-        
-        // Retourner la liste des formations au format JSON
-        return response()->json($formations);
+        try {
+            $formations = Formation::all();
+            return response()->json(['formations' => $formations]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Une erreur s\'est produite lors de la récupération des formations'], 500);
+        }
     }
 
     public function store(Request $request)
     {
-        // Valider les données reçues du formulaire
-        $request->validate([
-            'nom' => 'required|string',
-            'time' => 'required|string',
-            'but' => 'required|string',
-            'description' => 'required|string',
-            'lieu' => 'required|string',
-            // Ajoutez d'autres règles de validation au besoin
-        ]);
-
-        // Créer une nouvelle formation avec les données reçues et sauvegarder dans la base de données
-        $formation = Formation::create($request->all());
-
-        // Retourner la formation créée au format JSON
-        return response()->json($formation);
+        try {
+            $request->validate([
+                'nom' => 'required|string',
+                'time' => 'required|string',
+                'but' => 'required|string',
+                'description' => 'required|string',
+                'lieu' => 'required|string',
+            ]);
+            $formation = Formation::create($request->all());
+            return response()->json(['message' => 'Formation créée avec succès', 'data' => $formation], 201);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Une erreur s\'est produite lors de la création de la formation'], 500);
+        }
     }
 
     public function show($id)
     {
-        // Rechercher la formation avec l'ID spécifié
-        $formation = Formation::findOrFail($id);
-
-        // Retourner la formation trouvée au format JSON
-        return response()->json($formation);
+        try {
+            $formation = Formation::findOrFail($id);
+            return response()->json(['formation' => $formation]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Formation non trouvée'], 404);
+        }
     }
 
     public function update(Request $request, $id)
     {
-        // Rechercher la formation avec l'ID spécifié
-        $formation = Formation::findOrFail($id);
-
-        // Valider les données reçues du formulaire
-        $request->validate([
-            'nom' => 'string',
-            'time' => 'string',
-            'but' => 'string',
-            'description' => 'string',
-            'lieu' => 'string',
-            // Ajoutez d'autres règles de validation au besoin
-        ]);
-
-        // Mettre à jour les données de la formation avec les données reçues
-        $formation->update($request->all());
-
-        // Retourner la formation mise à jour au format JSON
-        return response()->json($formation);
+        try {
+            $formation = Formation::findOrFail($id);
+            $request->validate([
+                'nom' => 'string',
+                'time' => 'string',
+                'but' => 'string',
+                'description' => 'string',
+                'lieu' => 'string',
+            ]);
+            $formation->update($request->all());
+            return response()->json(['message' => 'Formation modifiée avec succès', 'data' => $formation], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Une erreur s\'est produite lors de la modification de la formation'], 500);
+        }
     }
 
     public function destroy($id)
     {
-        // Rechercher la formation avec l'ID spécifié
-        $formation = Formation::findOrFail($id);
-        
-        // Supprimer la formation
-        $formation->delete();
-
-        // Retourner un message JSON indiquant que la formation a été supprimée avec succès
-        return response()->json(['message' => 'Formation supprimée avec succès']);
+        try {
+            $formation = Formation::findOrFail($id);
+            $formation->delete();
+            return response()->json(['message' => 'Formation supprimée avec succès'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Une erreur s\'est produite lors de la suppression de la formation'], 500);
+        }
     }
 }
