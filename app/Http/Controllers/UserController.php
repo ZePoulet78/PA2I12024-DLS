@@ -12,7 +12,7 @@ class UserController extends Controller
     public function addUser(Request $request){
 
         $this->validate($request,[
-            'role' => 'integer|string',
+            'role' => 'required|integer',
             'firstname' => 'required|string|max:255',
             'lastname' => 'required|string|max:255',
             'email' => 'required|string|max:255|unique:users',
@@ -83,22 +83,8 @@ class UserController extends Controller
             'tel' => 'required|string|max:10',
         ]);
 
-        
-
-        // $existingUser = User::where('email', $data['email'])->first();
-
-        // if ($existingUser) {
-        //     return response()->json(['message' => 'User already exists'], 409);
-        // }
-
         $data = $request->all();
-        
-        // $new->role = $data['role'] ?? $new->role;
-        // $new->firstname = $data['firstname'] ?? $new->firstname;
-        // $new->lastname = $data['lastname'] ?? $new->lastname;
-        // $new->email = $data['email'] ?? $new->email;
-        // $new->password = Hash::make($data['password']) ?? $new->password;
-        // $new->tel = $data['tel'] ?? $new->tel;
+    
         $new->fill([
             'role' => $data['role'],
             'firstname' => $data['firstname'],

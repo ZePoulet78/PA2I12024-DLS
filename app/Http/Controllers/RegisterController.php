@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Demande;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
@@ -17,7 +18,7 @@ class RegisterController extends Controller
             'email' => 'required|string|max:255|unique:users',
             'password' => 'required|string|min:8',
             'tel' => 'required|string|max:10',
-            'avatar' => 'required|string|max:255'
+            'avatar' => 'nullable|string|max:255'
         ]);
 
         $data = $request->all();
@@ -29,7 +30,7 @@ class RegisterController extends Controller
         }
 
         
-        $user = new User();
+        $user = new Demande();
         $user->role = $data['role'];
         $user->firstname = $data['firstname'];
         $user->lastname = $data['lastname'];
@@ -67,7 +68,7 @@ class RegisterController extends Controller
 
     public function rejectUser(Request $request, $demandeId){
     
-        $demande = DemandeInscription::find($demandeId);
+        $demande = Demande::find($demandeId);
 
     if (!$demande) {
         return response()->json(['message' => 'Demand not found'], 404);
@@ -79,4 +80,28 @@ class RegisterController extends Controller
     
     }
 
+
+    public function indexRegister(){
+        $users = Demande::all();
+
+        if (!$users) {
+            return response()->json(['message' => 'Demands not found'], 404);
+        }
+
+        return response()->json(['user' => $users]);
 }
+
+    public function showRegister($id){
+        
+        $user = Demande::find($id);
+
+        if (!$user) {
+            return response()->json(['message' => 'Demand not found'], 404);
+        }
+        return response()->json(['user' => $user]);
+}
+
+}
+
+
+    
