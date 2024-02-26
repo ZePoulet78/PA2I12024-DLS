@@ -9,6 +9,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\MakeActivityController;
+use App\Http\Controllers\MakeFormationController;
 
 
 /*
@@ -22,11 +23,6 @@ use App\Http\Controllers\MakeActivityController;
 |
 */
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//    return $request->user();
-// });
-
-//formations
 Route::get('/formations', [FormationController::class, 'index']);
 Route::post('/formations', [FormationController::class, 'store']);
 Route::get('/formations/{id}', [FormationController::class, 'show']);
@@ -68,5 +64,9 @@ Route::patch('/act/{id}', [ActivityController::class, 'updateA']);
 //Faire Activité
 Route::post('/makeActivity', [MakeActivityController::class, 'makeActivity']);
 Route::get('/makeActivity', [MakeActivityController::class, 'indexMa']);
+
+//Faire Formation
+Route::post('/makeFormation', [MakeFormationController::class, 'makeFormation']);
+Route::get('/makeFormation', [MakeFormationController::class, 'indexMf']);
 
 

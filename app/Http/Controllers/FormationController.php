@@ -11,8 +11,8 @@ class FormationController extends Controller
     public function index()
     {
         try {
-            $formations = Formation::all();
-            return response()->json(['formations' => $formations]);
+            $formations = Formation::all(); 
+            return response()->json(['formations' => $formations]); 
         } catch (\Exception $e) {
             return response()->json(['error' => 'Une erreur s\'est produite lors de la récupération des formations'], 500);
         }
@@ -26,7 +26,7 @@ class FormationController extends Controller
                 'time' => 'required|string',
                 'but' => 'required|string',
                 'description' => 'required|string',
-                'lieu' => 'required|string',
+                'lieu' => 'required|string'
             ]);
             $formation = Formation::create($request->all());
             return response()->json(['message' => 'Formation créée avec succès', 'data' => $formation], 201);

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\makeFormation;
 
 class MakeFormationController extends Controller
 {
@@ -18,7 +19,7 @@ class MakeFormationController extends Controller
         return response()->json(['message' => 'MakeFormation créée avec succès', 'data' => $makeFormation], 201);
     }
 
-    public function indexMa()
+    public function indexMf()
     {
         $for = makeFormation::all();
 
@@ -29,7 +30,7 @@ class MakeFormationController extends Controller
         return response()->json(['formation' => $for]);
     }
 
-    public function showMa($id)
+    public function showMf($id)
     {
         $for = makeFormation::find($id);
 
