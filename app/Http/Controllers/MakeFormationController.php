@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\makeFormation;
+use App\Models\User;
+use App\Models\Formation;
+use App\Models\MakeFormation;
 
 class MakeFormationController extends Controller
 {
@@ -11,7 +13,7 @@ class MakeFormationController extends Controller
     {
         $request->validate([
             'user_id' => 'required|exists:users,id',
-            'formation_id' => 'required|exists:formation,id',
+            'formation_id' => 'required|exists:formations,id',
         ]);
 
         $makeFormation = MakeFormation::create($request->all());
@@ -21,23 +23,19 @@ class MakeFormationController extends Controller
 
     public function indexMf()
     {
-        $for = makeFormation::all();
+        $makeFormations = MakeFormation::all();
 
-        if (!$for) {
-            return response()->json(['message' => 'formation not found'], 404);
-        }
-
-        return response()->json(['formation' => $for]);
+        return response()->json(['makeFormations' => $makeFormations]);
     }
 
     public function showMf($id)
     {
-        $for = makeFormation::find($id);
+        $makeFormation = MakeFormation::find($id);
 
-        if (!$for) {
-            return response()->json(['message' => 'formation not found'], 404);
+        if (!$makeFormation) {
+            return response()->json(['message' => 'MakeFormation non trouvée'], 404);
         }
-        return response()->json(['formation' => $for]);
+
+        return response()->json(['makeFormation' => $makeFormation]);
     }
 }
-
