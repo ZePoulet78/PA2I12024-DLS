@@ -32,7 +32,7 @@ Route::delete('/formations/{id}', [FormationController::class, 'destroy']);
 //     return $request->user();
 // });
 Route::post('/user', [UserController::class, 'addUser']);
-Route::get('/user', [UserController::class, 'index']);
+Route::get('/users', [UserController::class, 'index']);
 Route::get('/user/{user}', [UserController::class, 'show']);
 Route::delete('/user/{user}', [UserController::class, 'destroy']);
 Route::patch('/user/{user}', [UserController::class, 'update']);
