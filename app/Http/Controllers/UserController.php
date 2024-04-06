@@ -28,6 +28,7 @@ class UserController extends Controller
             return response()->json(['message' => 'User already exists'], 409);
         }
 
+
         
         $user = new User();
         $user->role = $data['role'];
@@ -36,8 +37,9 @@ class UserController extends Controller
         $user->email = $data['email'];
         $user->password = Hash::make($data['password']);
         $user->tel = $data['tel'];
+        $user->isRegistered = '1';
         $user->save();
-        
+
         return response()->json(['message' => 'user created successfully', 'data' => $user], 201);
     }
 
