@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\checkRole;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MaraudeController;
@@ -38,6 +39,7 @@ Route::get('/formations/{id}', [FormationController::class, 'show']);
 Route::patch('/formations/{id}', [FormationController::class, 'update']);
 Route::delete('/formations/{id}', [FormationController::class, 'destroy']);
 
+
 //     return $request->user();
 // });
 Route::post('/user', [UserController::class, 'addUser']);
@@ -45,16 +47,36 @@ Route::get('/users', [UserController::class, 'index']);
 Route::get('/user/{user}', [UserController::class, 'show']);
 Route::delete('/user/{user}', [UserController::class, 'destroy']);
 Route::patch('/user/{user}', [UserController::class, 'update']);
+=======
+
+
+Route::middleware(['auth:sanctum',checkRole::class . ':0'])->group(function () {
+    // Users
+    Route::post('/admin/user', [UserController::class, 'addUser']);
+    Route::get('/admin/users', [UserController::class, 'index']);
+    Route::get('/admin/user/{user}', [UserController::class, 'show']);
+    Route::delete('/admin/user/{user}', [UserController::class, 'destroy']);
+    Route::patch('/admin/user/{user}', [UserController::class, 'update']);
+
+    // Register / Demandes
+    Route::post('/admin/demand/a/{id}', [RegisterController::class, 'approveUser']);
+    Route::get('/demand', [RegisterController::class, 'indexRegister']);
+    Route::get('/demand/{user}', [RegisterController::class, 'showRegister']);
+    Route::delete('/demand/{user}', [RegisterController::class, 'rejectUser']);
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [LoginController::class, 'logout']);
+});
+
 
 //register
 Route::post('/demand', [RegisterController::class, 'resgisterUser']);
-Route::post('/demand/a/{id}', [RegisterController::class, 'approveUser']);
-Route::get('/demand', [RegisterController::class, 'indexRegister']);
-Route::get('/demand/{user}', [RegisterController::class, 'showRegister']);
-Route::delete('/demand/{user}', [RegisterController::class, 'rejectUser']);
+
 
 //login
 Route::post('/login', [LoginController::class, 'login']);
+
 
 //stock
 Route::post('/stock', [StockController::class, 'addProduct']);

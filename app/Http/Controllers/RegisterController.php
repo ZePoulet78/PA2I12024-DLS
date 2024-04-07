@@ -30,7 +30,7 @@ class RegisterController extends Controller
         }
 
         
-        $user = new Demande();
+        $user = new User();
         $user->role = $data['role'];
         $user->firstname = $data['firstname'];
         $user->lastname = $data['lastname'];
@@ -38,38 +38,35 @@ class RegisterController extends Controller
         $user->password = Hash::make($data['password']);
         $user->tel = $data['tel'];
         $user->avatar = $data['avatar'];
+
+        $user->isRegistered = $data['isRegistered'];
+
         $user->save();
         
         return response()->json(['message' => 'demand to create acount sent successfully', 'data' => $user], 201);
     }
 
-    public function approveUser(Request $request, $id){
-
-        $demande = Demande::find($id);
-        if (!$demande) {
-            return response()->json(['message' => 'Demand not found'], 404);
-        }
-
-        $userD = [
-            'role' => $demande->role,
-            'firstname' => $demande->firstname,
-            'lastname' => $demande->lastname,
-            'email' => $demande->email,
-            'password' => $demande->password, 
-            'tel' => $demande->tel,
-            'avatar' => $demande->avatar,
-        ];
+    public function approveUser(Request $request, $id)
+    {
+        $user = User::find($id);
     
-        $user = User::create($userD);
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+    
+        $user->isRegistered = 1;
+        $user->save();
     
         return response()->json(['message' => 'User approved successfully', 'data' => $user], 200);
+
         $demande->delete();
+
 
     }
 
     public function rejectUser(Request $request, $demandeId){
     
-        $demande = Demande::find($demandeId);
+        $demande = User::find($demandeId);
 
         if (!$demande) {
             return response()->json(['message' => 'Demand not found'], 404);
@@ -83,7 +80,7 @@ class RegisterController extends Controller
 
 
     public function indexRegister(){
-        $users = Demande::all();
+        $users = User::where('isRegistered','0');
 
         if (!$users) {
             return response()->json(['message' => 'Demands not found'], 404);
@@ -94,7 +91,7 @@ class RegisterController extends Controller
 
     public function showRegister($id){
         
-        $user = Demande::find($id);
+        $user = User::find($id);
 
         if (!$user) {
             return response()->json(['message' => 'Demand not found'], 404);
@@ -103,6 +100,3 @@ class RegisterController extends Controller
 }
 
 }
-
-
-    
