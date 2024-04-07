@@ -63,6 +63,7 @@ class RegisterController extends Controller
         $user = User::create($userD);
     
         return response()->json(['message' => 'User approved successfully', 'data' => $user], 200);
+        $demande->delete();
 
     }
 
@@ -70,14 +71,14 @@ class RegisterController extends Controller
     
         $demande = Demande::find($demandeId);
 
-    if (!$demande) {
-        return response()->json(['message' => 'Demand not found'], 404);
-    }
+        if (!$demande) {
+            return response()->json(['message' => 'Demand not found'], 404);
+        }
 
-    $demande->delete();
+        $demande->delete();
 
-    return response()->json(['message' => 'User rejected successfully'], 200);
-    
+        return response()->json(['message' => 'User rejected successfully'], 200);
+        
     }
 
 

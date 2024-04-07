@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\ShowController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -14,5 +17,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('layout');
 });
+//Route::get('/', [UserController::class, 'index'])->name('welcome');
+//Route::get('/', [ShowController::class, 'index'])->name('welcome');
