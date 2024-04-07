@@ -47,7 +47,6 @@ Route::get('/users', [UserController::class, 'index']);
 Route::get('/user/{user}', [UserController::class, 'show']);
 Route::delete('/user/{user}', [UserController::class, 'destroy']);
 Route::patch('/user/{user}', [UserController::class, 'update']);
-=======
 
 
 Route::middleware(['auth:sanctum',checkRole::class . ':0'])->group(function () {
