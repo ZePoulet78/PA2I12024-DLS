@@ -53,7 +53,7 @@ class UserController extends Controller
             return response()->json(['message' => 'Users not found'], 404);
         }
 
-        return response()->json(['user' => $users]);
+        return response()->json(['users' => $users]);
     }
 
     public function show($id)

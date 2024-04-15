@@ -37,9 +37,9 @@ class RegisterController extends Controller
         $user->email = $data['email'];
         $user->password = Hash::make($data['password']);
         $user->tel = $data['tel'];
-        $user->avatar = $data['avatar'];
+        $user->avatar = $data['avatar'] ?? null;
 
-        $user->isRegistered = $data['isRegistered'];
+        $user->isRegistered = 0;
 
         $user->save();
         
@@ -76,8 +76,7 @@ class RegisterController extends Controller
 
 
     public function indexRegister(){
-        $users = User::where('isRegistered','0');
-
+        $users = User::where('isRegistered', 0)->get();
         if (!$users) {
             return response()->json(['message' => 'Demands not found'], 404);
         }

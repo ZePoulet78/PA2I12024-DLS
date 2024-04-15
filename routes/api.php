@@ -11,7 +11,7 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\MakeActivityController;
 use App\Http\Controllers\MakeFormationController;
-
+use App\Http\Controllers\DocumentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +23,10 @@ use App\Http\Controllers\MakeFormationController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+Route::middleware('auth:sanctum')->group(function (){
+    Route::post('/upload', [DocumentController::class, 'upload']);
+});
+
 
 Route::get('/formations', [FormationController::class, 'index']);
 Route::post('/formations', [FormationController::class, 'store']);
@@ -32,7 +36,7 @@ Route::delete('/formations/{id}', [FormationController::class, 'destroy']);
 
 
 
-Route::middleware(['auth:sanctum',checkRole::class . ':0'])->group(function () {
+// Route::middleware(['auth:sanctum',checkRole::class . ':0'])->group(function () {
     // Users
     Route::post('/admin/user', [UserController::class, 'addUser']);
     Route::get('/admin/users', [UserController::class, 'index']);
@@ -45,15 +49,15 @@ Route::middleware(['auth:sanctum',checkRole::class . ':0'])->group(function () {
     Route::get('/demand', [RegisterController::class, 'indexRegister']);
     Route::get('/demand/{user}', [RegisterController::class, 'showRegister']);
     Route::delete('/demand/{user}', [RegisterController::class, 'rejectUser']);
-});
+// });
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [LoginController::class, 'logout']);
 });
 
 //register
-Route::post('/demand', [RegisterController::class, 'resgisterUser']);
-
+Route::post('/register', [RegisterController::class, 'resgisterUser']);
+Route::get('/admin/joining', [RegisterController::class, 'indexRegister']);
 
 //login
 Route::post('/login', [LoginController::class, 'login']);
