@@ -5,17 +5,26 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class LoginController extends Controller
 {
     public function login(Request $request)
     {
+
+
+    
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
         
+        $user = User::where('email', $credentials['email'])->first();
 
+        if ($user && $user->tokens()->count() > 0) {
+            return response()->json(['message' => 'User is already authenticated'], 422);
+        }
+        
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
             $token = $user->createToken('authToken')->plainTextToken;
@@ -28,6 +37,8 @@ class LoginController extends Controller
         }
     
         return response()->json(['message' => 'False Auth'], 401);
+
+
     }
     
 
