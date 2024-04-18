@@ -13,7 +13,7 @@ class LoginController extends Controller
     {
 
 
-    
+        // j'ai ajt verif pour pas se connecter plusieurs fois
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
