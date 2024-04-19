@@ -11,7 +11,7 @@ class MakeActivityController extends Controller
     {
         $request->validate([
             'user_id' => 'required|exists:users,id',
-            'activity_id' => 'required|exists:activity,id',
+            'activity_id' => 'required|exists:activity,id|unique:make_activities,activity_id,NULL,id,user_id,' . $request->user_id,
         ]);
 
         $makeActivity = MakeActivity::create($request->all());

@@ -8,21 +8,18 @@ use Illuminate\Support\Facades\Validator;
 
 class MaraudeController extends Controller
 {
-    // Récupérer toutes les maraudes
 public function index()
 {
     $maraudes = Maraude::all();
     return response()->json($maraudes);
 }
 
-// Récupérer une maraude spécifique par son ID
 public function show($id)
 {
     $maraude = Maraude::findOrFail($id);
     return response()->json($maraude);
 }
 
-    // Ajouter une nouvelle maraude
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -39,7 +36,6 @@ public function show($id)
         return response()->json($maraude, 201);
     }
 
-    // Modifier une maraude existante
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
@@ -57,7 +53,6 @@ public function show($id)
         return response()->json($maraude, 200);
     }
 
-    // Supprimer une maraude
     public function destroy($id)
     {
         $maraude = Maraude::findOrFail($id);

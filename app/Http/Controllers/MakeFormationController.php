@@ -13,7 +13,7 @@ class MakeFormationController extends Controller
     {
         $request->validate([
             'user_id' => 'required|exists:users,id',
-            'formation_id' => 'required|exists:formations,id',
+            'formation_id' => 'required|exists:formations,id|unique:make_activities,formation_id,NULL,id,user_id,' . $request->user_id,
         ]);
 
         $makeFormation = MakeFormation::create($request->all());
