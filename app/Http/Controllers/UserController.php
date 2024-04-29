@@ -37,7 +37,7 @@ class UserController extends Controller
         $user->email = $data['email'];
         $user->password = Hash::make($data['password']);
         $user->tel = $data['tel'];
-        $user->isRegistered = '1';
+        $user->isRegistered = 1;
         $user->save();
 
         return response()->json(['message' => 'user created successfully', 'data' => $user], 201);
@@ -53,7 +53,7 @@ class UserController extends Controller
             return response()->json(['message' => 'Users not found'], 404);
         }
 
-        return response()->json(['user' => $users]);
+        return response()->json(['users' => $users]);
     }
 
     public function show($id)
@@ -80,12 +80,16 @@ class UserController extends Controller
             'role' => 'required|integer',
             'firstname' => 'required|string|max:255',
             'lastname' => 'required|string|max:255',
-            'email' => 'required|string|max:255|unique:users',
+            'email' => 'required|string|max:255',
             'password' => 'required|string|min:8',
-            'tel' => 'required|string|max:10',
+            'tel' => 'required|string|min:10|max:10',
         ]);
 
         $data = $request->all();
+
+        if ($new->email !== $data['email'] && User::where('email', $data['email'])->exists()) {
+            return response()->json(['message' => 'Email already in use'], 422);
+        }
     
         $new->fill([
             'role' => $data['role'],

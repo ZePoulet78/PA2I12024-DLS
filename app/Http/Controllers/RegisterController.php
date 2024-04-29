@@ -39,7 +39,7 @@ class RegisterController extends Controller
         $user->tel = $data['tel'];
         $user->avatar = $data['avatar'];
 
-        $user->isRegistered = $data['isRegistered'];
+        $user->isRegistered = 0;
 
         $user->save();
         
@@ -59,7 +59,7 @@ class RegisterController extends Controller
     
         return response()->json(['message' => 'User approved successfully', 'data' => $user], 200);
 
-        $demande->delete();
+
 
 
     }

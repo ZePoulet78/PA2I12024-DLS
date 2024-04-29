@@ -16,5 +16,5 @@ class Formation extends Model
     use HasFactory;
 
     // protected $primaryKey = 'id_formation'; // Définir la clé primaire personnalisée
-    protected $fillable = ['nom', 'time', 'but', 'description', 'lieu']; // Attributs remplissables
+    protected $fillable = ['nom', 'date_debut', 'date_fin', 'time', 'but', 'description', 'lieu']; // Attributs remplissables
 }

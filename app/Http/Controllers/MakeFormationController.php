@@ -18,14 +18,14 @@ class MakeFormationController extends Controller
 
         $makeFormation = MakeFormation::create($request->all());
 
-        return response()->json(['message' => 'MakeFormation créée avec succès', 'data' => $makeFormation], 201);
+        return response()->json(['message' => 'MakeFormation créée avec succès', 'makeformations' => $makeFormation], 201);
     }
 
     public function indexMf()
     {
         $makeFormations = MakeFormation::all();
 
-        return response()->json(['makeFormations' => $makeFormations]);
+        return response()->json(['makeformations' => $makeFormations]);
     }
 
     public function showMf($id)
@@ -36,6 +36,6 @@ class MakeFormationController extends Controller
             return response()->json(['message' => 'MakeFormation non trouvée'], 404);
         }
 
-        return response()->json(['makeFormation' => $makeFormation]);
+        return response()->json(['makeformations' => $makeFormation]);
     }
 }

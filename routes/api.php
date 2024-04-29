@@ -49,7 +49,7 @@ Route::delete('/user/{user}', [UserController::class, 'destroy']);
 Route::patch('/user/{user}', [UserController::class, 'update']);
 
 
-Route::middleware(['auth:sanctum',checkRole::class . ':0'])->group(function () {
+// Route::middleware(['auth:sanctum',checkRole::class . ':0'])->group(function () {
     // Users
     Route::post('/admin/user', [UserController::class, 'addUser']);
     Route::get('/admin/users', [UserController::class, 'index']);
@@ -62,7 +62,7 @@ Route::middleware(['auth:sanctum',checkRole::class . ':0'])->group(function () {
     Route::get('/demand', [RegisterController::class, 'indexRegister']);
     Route::get('/demand/{user}', [RegisterController::class, 'showRegister']);
     Route::delete('/demand/{user}', [RegisterController::class, 'rejectUser']);
-});
+// });
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [LoginController::class, 'logout']);

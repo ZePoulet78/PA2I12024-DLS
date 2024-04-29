@@ -10,8 +10,8 @@ class ActivityController extends Controller
     public function addActivity(Request $request){
 
         $this->validate($request,[
-            'heure_debut' => 'required|date_format:H:i',
-            'heure_fin' => 'required|date_format:H:i',
+            'heure_debut' => 'required|date_format:HH:mm',
+            'heure_fin' => 'required|date_format:HH:mm|after:heure_debut',
             'date' => 'required|date_format:Y-m-d',
             'type' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -29,7 +29,7 @@ class ActivityController extends Controller
         $act->description = $data['description'];
         $act->save();
         
-        return response()->json(['message' => 'Activity created successfully', 'data' => $act], 201);
+        return response()->json(['message' => 'Activity created successfully', 'activity' => $act], 201);
     }
 
 
@@ -66,7 +66,7 @@ class ActivityController extends Controller
 
         $this->validate($request, [
             'heure_debut' => 'required|date_format:H:i',
-            'heure_fin' => 'required|date_format:H:i',
+            'heure_fin' => 'required|date_format:H:i|after:heure_debut',
             'date' => 'required|date_format:Y-m-d',
             'type' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -84,7 +84,7 @@ class ActivityController extends Controller
         
         $new->save();
     
-        return response()->json(['message' => 'Activity modified successfully', 'data' => $data], 201);
+        return response()->json(['message' => 'Activity modified successfully', 'activity' => $data], 201);
 
     }
 
