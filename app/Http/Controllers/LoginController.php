@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use Laravel\Sanctum\PersonalAccessToken;
 
 class LoginController extends Controller
 {
@@ -19,24 +18,26 @@ class LoginController extends Controller
             'password' => 'required',
         ]);
         
-        $user = User::where('email', $credentials['email'])->first();
+        // $user = User::where('email', $credentials['email'])->first();
 
-        if ($user && $user->tokens()->count() > 0) {
-            return response()->json(['message' => 'User is already authenticated'], 422);
-        }
-        
+        // if ($user && $user->tokens()->count() > 0) {
+        //     return response()->json(['message' => 'User is already authenticated'], 422);
+        // }
+        // 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
-            $token = $user->createToken('authToken')->plainTextToken;
+            $token = $user->createToken('authToken', expiresAt:now()->addDay())->plainTextToken;
     
             return response()->json([
                 'message' => 'Logged in successfully',
                 'authToken' => $token,
                 'user' => $user,
+                'roles' => $user->roles,
+                'expires_in' => config('sanctum.expiration'), 
             ]);
         }
     
-        return response()->json(['message' => 'False Auth'], 401);
+        return response()->json(['message' => 'Erreur lors de l\'authentification'], 401);
 
 
     }

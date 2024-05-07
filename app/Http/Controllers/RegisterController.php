@@ -6,10 +6,11 @@ use Illuminate\Http\Request;
 use App\Models\Demande;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class RegisterController extends Controller
 {
-    public function resgisterUser(Request $request){
+   public function resgisterUser(Request $request){
 
         $this->validate($request,[
             'role' => 'integer|string',
@@ -17,8 +18,9 @@ class RegisterController extends Controller
             'lastname' => 'required|string|max:255',
             'email' => 'required|string|max:255|unique:users',
             'password' => 'required|string|min:8',
+            'checkPassword' => 'required|same:password',
             'tel' => 'required|string|max:10',
-            'avatar' => 'nullable|string|max:255'
+            'avatar' => 'nullable|file|mimes:jpeg,png,jpg|max:10240',
         ]);
 
         $data = $request->all();
@@ -29,7 +31,13 @@ class RegisterController extends Controller
             return response()->json(['message' => 'email already used'], 409);
         }
 
+        if($data['password'] != $data['checkPassword']){
+            return response()->json(['message' => 'passwords do not match'], 400);
+        }
+        strtoupper($data['lastname']);
         
+        ucfirst($data['firstname']);
+
         $user = new User();
         $user->role = $data['role'];
         $user->firstname = $data['firstname'];
@@ -43,9 +51,15 @@ class RegisterController extends Controller
 
         $user->save();
         
+
+        if ($request->hasFile('avatar')) {
+            $avatarPath = $request->file('avatar')->store('uploads/avatar/' . (string)$user->id, 's3');
+            $user->avatar = Storage::disk('s3')->url($avatarPath);
+        }
+
         return response()->json(['message' => 'demand to create acount sent successfully', 'data' => $user], 201);
     }
-
+ 
     public function approveUser(Request $request, $id)
     {
         $user = User::find($id);
@@ -82,7 +96,7 @@ class RegisterController extends Controller
         }
 
         return response()->json(['user' => $users]);
-}
+    }
 
     public function showRegister($id){
         
@@ -92,6 +106,6 @@ class RegisterController extends Controller
             return response()->json(['message' => 'Demand not found'], 404);
         }
         return response()->json(['user' => $user]);
-}
+    }
 
 }

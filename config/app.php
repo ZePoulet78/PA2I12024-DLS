@@ -42,7 +42,8 @@ return [
     |
     */
 
-    'debug' => (bool) env('APP_DEBUG', false),
+    'debug' => true,
+    // 'debug' => (bool) env('APP_DEBUG', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -168,6 +169,8 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        // App\Providers\Wasabi\WasabiServiceProvider::class,
+
     ])->toArray(),
 
     /*

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -37,7 +38,7 @@ class UserController extends Controller
         $user->email = $data['email'];
         $user->password = Hash::make($data['password']);
         $user->tel = $data['tel'];
-        $user->isRegistered = '1';
+        $user->isRegistered = 1;
         $user->save();
 
         return response()->json(['message' => 'user created successfully', 'data' => $user], 201);
@@ -63,7 +64,10 @@ class UserController extends Controller
         if (!$user) {
             return response()->json(['message' => 'User not found'], 404);
         }
-        return response()->json(['user' => $user]);
+        return response()->json([
+            'user' => $user,
+            'roles'=> $user->roles
+        ]);
     }
 
     //fonction de modification
@@ -114,12 +118,16 @@ class UserController extends Controller
 
         return response()->json(['message' => 'User deleted successfully'], 201);
     }
+    
+    public function getUserRole($id)
+    {
+        $user = User::find($id);
 
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
 
-
-
-
-
-
+        return response()->json(['roles' => $user->roles]);
+    }
 
 }
