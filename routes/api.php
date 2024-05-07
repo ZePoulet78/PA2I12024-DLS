@@ -94,9 +94,14 @@ Route::patch('/act/{id}', [ActivityController::class, 'updateA']);
 //Faire Activité
 Route::post('/makeActivity', [MakeActivityController::class, 'makeActivity']);
 Route::get('/makeActivity', [MakeActivityController::class, 'indexMa']);
+Route::get('/makeActivity/{id}', [MakeActivityController::class, 'GetUsersIdByActivityId']);
+
 
 //Faire Formation
 Route::post('/makeFormation', [MakeFormationController::class, 'makeFormation']);
 Route::get('/makeFormation', [MakeFormationController::class, 'indexMf']);
 
 
+Route::post('/donations', [DonationController::class, 'createDonation'])->name('donations.create');
+Route::get('/donations/success', [DonationController::class, 'handleSuccessfulDonation'])->name('donations.success');
+Route::get('/donations/cancel', [DonationController::class, 'handleCancelledDonation'])->name('donations.cancel');

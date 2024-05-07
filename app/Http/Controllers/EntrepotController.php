@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Warehouse;
 
 class EntrepotController extends Controller
 {
     public function index()
     {
-        $entrepots = Entrepot::all();
+        $entrepots = Warehouse::all();
         return response()->json($entrepots);
     }
 
@@ -20,20 +21,20 @@ class EntrepotController extends Controller
             'superficie_entrepot' => 'required|numeric|min:0',
         ]);
 
-        $entrepot = Entrepot::create($request->all());
+        $entrepot = Warehouse::create($request->all());
 
         return response()->json($entrepot, 201);
     }
 
     public function show($id)
     {
-        $entrepot = Entrepot::findOrFail($id);
+        $entrepot = Warehouse::findOrFail($id);
         return response()->json($entrepot);
     }
 
     public function update(Request $request, $id)
     {
-        $entrepot = Entrepot::findOrFail($id);
+        $entrepot = Warehouse::findOrFail($id);
 
         $request->validate([
             'nom_entrepot' => 'required',
@@ -48,7 +49,7 @@ class EntrepotController extends Controller
 
     public function destroy($id)
     {
-        $entrepot = Entrepot::findOrFail($id);
+        $entrepot = Warehouse::findOrFail($id);
         $entrepot->delete();
         return response()->json(null, 204);
     }

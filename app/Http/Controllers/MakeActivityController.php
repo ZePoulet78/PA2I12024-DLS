@@ -13,7 +13,7 @@ class MakeActivityController extends Controller
     {
         $request->validate([
             'user_id' => 'required|exists:users,id',
-            'activity_id' => 'required|exists:activity,id|unique:make_activities,activity_id,NULL,id,user_id,' . $request->user_id,
+            'activity_id' => 'required|exists:activity,id|unique:make_activity,activity_id,NULL,id,user_id,' . $request->user_id,
         ]);
 
         $newActivity = Activity::findOrFail($request->activity_id);
@@ -62,5 +62,16 @@ class MakeActivityController extends Controller
             return response()->json(['message' => 'activity not found'], 404);
         }
         return response()->json(['activity' => $act]);
+    }
+
+    public function GetUsersIdByActivityId($activity_id)
+    {
+        $users = MakeActivity::where('activity_id', $activity_id)->get();
+
+        if (!$users) {
+            return response()->json(['message' => 'activity not found'], 404);
+        }
+
+        return response()->json(['users' => $users]);
     }
 }

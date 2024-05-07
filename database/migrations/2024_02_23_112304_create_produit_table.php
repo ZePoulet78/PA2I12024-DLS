@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->integer('quantity');
-            $table->date('expiration_date')->format('d/m/Y');
+            $table->date('expiration_date');
+            $table->foreignId('id_entrepot')->references('id')->on('entrepots');
             $table->timestamps();
         });
     }

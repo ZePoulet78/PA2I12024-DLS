@@ -14,6 +14,12 @@ class Produit extends Model
     protected $fillable = [
         'name',
         'quantity',
-        'expiration_date'
+        'expiration_date',
+        'id_entrepot',
     ];
+
+    public function entrepot()
+    {
+        return $this->belongsTo(Entrepot::class, 'id_entrepot');
+    }
 }

@@ -4,20 +4,26 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Activity;
+use Illuminate\Support\Carbon;
 
 class ActivityController extends Controller
 {
     public function addActivity(Request $request){
 
         $this->validate($request,[
-            'heure_debut' => 'required|date_format:HH:mm',
-            'heure_fin' => 'required|date_format:HH:mm|after:heure_debut',
+            'heure_debut' => 'required|date_format:H:i',
+            'heure_fin' => 'required|date_format:H:i|after:heure_debut',
             'date' => 'required|date_format:Y-m-d',
             'type' => 'required|string|max:255',
             'description' => 'nullable|string',
         ]);
 
         $data = $request->all();
+
+        $today = Carbon::today()->format('Y-m-d');
+        if ($data['date'] < $today) {
+            return response()->json(['message' => 'La date de l\'activité ne peut pas être antérieure à aujourd\'hui.'], 400);
+        }
 
 
         
@@ -56,36 +62,45 @@ class ActivityController extends Controller
 
     //fonction de modification
 
-    public function updateA(Request $request, $id){
-
+    public function updateA(Request $request, $id)
+    {
         $new = Activity::find($id);
-
-        if(!$new){
-            return response()->json(['message' => 'activity not found', 404]);
+    
+        if (!$new) {
+            return response()->json(['message' => 'activity not found'], 404);
         }
-
+    
         $this->validate($request, [
-            'heure_debut' => 'required|date_format:H:i',
-            'heure_fin' => 'required|date_format:H:i|after:heure_debut',
+            'heure_debut' => 'required|date_format:H:i:s',
+            'heure_fin' => 'required|date_format:H:i:s|after:heure_debut',
             'date' => 'required|date_format:Y-m-d',
             'type' => 'required|string|max:255',
             'description' => 'nullable|string',
         ]);
 
+        $today = Carbon::today()->format('Y-m-d');
+        if ($data['date'] < $today) {
+            return response()->json(['message' => 'La date de l\'activité ne peut pas être antérieure à aujourd\'hui.'], 400);
+        }
+    
         $data = $request->all();
+        $heureDebut = Carbon::parse($data['heure_debut'])->format('H:i');
+        $heureFin = Carbon::parse($data['heure_fin'])->format('H:i');
     
         $new->fill([
-            'heure_debut' => $data['heure_debut'],
-            'heure_fin' => $data['heure_fin'],
+            'heure_debut' => $heureDebut,
+            'heure_fin' => $heureFin,
             'date' => $data['date'],
             'type' => $data['type'],
             'description' => $data['description']
         ]);
-        
+    
         $new->save();
     
-        return response()->json(['message' => 'Activity modified successfully', 'activity' => $data], 201);
-
+        return response()->json([
+            'message' => 'Activity modified successfully',
+            'activity' => $data
+        ], 201);
     }
 
     public function destroyA(Request $request, $id)

@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('maraude', function (Blueprint $table) {
             $table->id();
-            $table->date('date');
-            $table->string('ville');
+            $table->date('maraud_date');
+            $table->time('departure_time');
+            $table->time('return_time');
+            $table->string('itinerary');
             $table->timestamps();
         });
     }

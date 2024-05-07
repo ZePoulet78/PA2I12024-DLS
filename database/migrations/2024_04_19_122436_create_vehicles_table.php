@@ -13,11 +13,10 @@ return new class extends Migration
     {
         Schema::create('vehicles', function (Blueprint $table) {
             $table->id();
-            $table->string('immatriculation')->unique();
-            $table->string('modele');
-            $table->year('annee');
-            $table->unsignedBigInteger('id_entrepot');
-            $table->foreign('id_entrepot')->references('id')->on('warehouses')->onDelete('cascade');
+            $table->string('registration_number');
+            $table->string('model');
+            $table->integer('year');
+            $table->foreignId('warehouse_id')->constrained('warehouses')->onDelete('cascade');
             $table->timestamps();
         });
     }

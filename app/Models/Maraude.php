@@ -12,7 +12,9 @@ class Maraude extends Model
     protected $table = 'maraude'; 
     
     protected $fillable = [
-        'date',
-        'ville'
+        'maraud_date',
+        'departure_time',
+        'return_time',
+        'itinerary',
     ];
 }

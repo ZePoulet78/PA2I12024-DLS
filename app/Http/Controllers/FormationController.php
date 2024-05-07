@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Formation;
-
+use Illuminate\Support\Carbon;
 
 class FormationController extends Controller
 {
@@ -31,6 +31,11 @@ class FormationController extends Controller
                 'lieu' => 'required|string',
             ]);
 
+            $today = Carbon::today()->format('Y-m-d');
+            if ($request->date_debut < $today) {
+                return response()->json(['message' => 'La date de la formation ne peut pas être antérieure à aujourd\'hui.'], 400);
+            }
+
             $start = strtotime($request->date_debut . ' 00:00:00');
             $end = strtotime($request->date_fin . ' 23:59:59');
             $diff = ($end - $start) / (60 * 60); 
@@ -50,7 +55,7 @@ class FormationController extends Controller
     {
         try {
             $formation = Formation::findOrFail($id);
-            return response()->json(['formation' => $formation]);
+            return response()->json(['formations' => $formation]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Formation non trouvée'], 404);
         }
@@ -69,6 +74,12 @@ class FormationController extends Controller
                 'description' => 'required|string',
                 'lieu' => 'required|string',
             ]);
+
+            $today = Carbon::today()->format('Y-m-d');
+            if ($request->date_debut < $today) {
+                return response()->json(['message' => 'La date de la formation ne peut pas être antérieure à aujourd\'hui.'], 400);
+            }
+
             $start = strtotime($request->date_debut . ' 00:00:00');
             $end = strtotime($request->date_fin . ' 23:59:59');
             $diff = ($end - $start) / (60 * 60); 
@@ -84,10 +95,10 @@ class FormationController extends Controller
         }
     }
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         try {
-            $formation = Formation::findOrFail($id);
+            $formation = Formation::find($id);
             $formation->delete();
             return response()->json(['message' => 'Formation supprimée avec succès'], 200);
         } catch (\Exception $e) {

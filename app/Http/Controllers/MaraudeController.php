@@ -8,23 +8,25 @@ use Illuminate\Support\Facades\Validator;
 
 class MaraudeController extends Controller
 {
-public function index()
-{
-    $maraudes = Maraude::all();
-    return response()->json($maraudes);
-}
+    public function index()
+    {
+        $maraudes = Maraude::all();
+        return response()->json($maraudes);
+    }
 
-public function show($id)
-{
-    $maraude = Maraude::findOrFail($id);
-    return response()->json($maraude);
-}
+    public function show($id)
+    {
+        $maraude = Maraude::findOrFail($id);
+        return response()->json($maraude);
+    }
 
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'date' => 'required|date',
-            'ville' => 'required|string|max:255',
+            'maraud_date' => 'required|date',
+            'departure_time' => 'required',
+            'return_time' => 'required',
+            'itinerary' => 'required|string',
         ]);
 
         if ($validator->fails()) {
@@ -32,15 +34,16 @@ public function show($id)
         }
 
         $maraude = Maraude::create($validator->validated());
-
         return response()->json($maraude, 201);
     }
 
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'date' => 'required|date',
-            'ville' => 'required|string|max:255',
+            'maraud_date' => 'required|date',
+            'departure_time' => 'required',
+            'return_time' => 'required',
+            'itinerary' => 'required|string',
         ]);
 
         if ($validator->fails()) {
@@ -49,7 +52,6 @@ public function show($id)
 
         $maraude = Maraude::findOrFail($id);
         $maraude->update($validator->validated());
-
         return response()->json($maraude, 200);
     }
 
@@ -57,7 +59,6 @@ public function show($id)
     {
         $maraude = Maraude::findOrFail($id);
         $maraude->delete();
-
         return response()->json(null, 204);
     }
 }
