@@ -16,4 +16,5 @@ class Produit extends Model
         'quantity',
         'expiration_date'
     ];
+
 }

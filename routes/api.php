@@ -113,6 +113,14 @@ Route::middleware(['auth:sanctum', CheckItRole::class])->group(function () {
     Route::get('/it/tickets/category/{id}', [TicketController::class, 'getTicketByCategory']);
 
     Route::get('/it/tickets/status/{status}', [TicketController::class, 'getTicketByStatus']);
+    Route::get('/it/tickets/priority/{priority}', [TicketController::class, 'getTicketByPriority']);
+    
+    Route::get('/it/tickets/{id}/attachments', [TicketController::class, 'getTicketAttachments']);
+
+    Route::get('/it/tickets/{id}/comments', [TicketController::class, 'getTicketComments']);
+    
+    // get assigned user
+    Route::get('/it/tickets/{id}/assigned', [TicketController::class, 'getAssignedUser']);
 
     Route::patch('/it/tickets/{id}', [TicketController::class, 'update']);
     Route::delete('/it/tickets/{id}', [TicketController::class, 'destroy']);
@@ -124,6 +132,8 @@ Route::middleware(['auth:sanctum', CheckItRole::class])->group(function () {
     // get ticket categories
     Route::get('/it/ticket-categories', [TicketCatgoryController::class, 'index']);
 
+    // get ticket by assigned user
+    Route::get('/it/tickets/assigned/{id}', [TicketController::class, 'getTicketByAssigned']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {
