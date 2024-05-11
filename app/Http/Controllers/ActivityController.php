@@ -115,5 +115,29 @@ class ActivityController extends Controller
 
         return response()->json(['message' => 'activity deleted successfully'], 201);
     }
+
+    public function showUserActivities($id)
+    {
+        $act = Activity::where('user_id', $id)->get();
+
+        if (!$act) {
+            return response()->json(['message' => 'activity not found'], 404);
+        }
+
+        return response()->json(['activity' => $act]);
+    }
+
+    public function destroyUserActivities($id)
+    {
+        $user = Auth::user();
+
+        $act = Activity::where('user_id', $id)->delete();
+
+        if (!$act) {
+            return response()->json(['message' => 'activity not found'], 404);
+        }
+
+        return response()->json(['message' => 'activity deleted successfully'], 201);
+    }
     
 }

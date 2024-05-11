@@ -18,3 +18,5 @@ class Activity extends Model
         'description',
     ];
 }
+
+// ajouter l'user id

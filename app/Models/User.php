@@ -28,4 +28,25 @@ class User extends Authenticatable
         'password',
     ];
 
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'has_roles');
+    }
+
+    public function activities()
+    {
+        return $this->belongsToMany(Activity::class, 'make_activity');
+    }
+
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class);
+    }
+
+    public function hasRole($role)
+    {
+        return $this->roles()->where('name', $role)->exists();
+    }
+    
 }
