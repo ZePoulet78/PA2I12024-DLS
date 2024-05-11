@@ -59,7 +59,6 @@ class DonationController extends Controller
             $donation = Donation::find($donationId);
 
             if ($donation) {
-                // Gérer le don réussi
                 $donation->status = 'paid';
                 $donation->save();
 
@@ -94,7 +93,7 @@ class DonationController extends Controller
                 $donation = Donation::find($donationId);
 
                 if ($donation) {
-                    // Gérer l'annulation du don
+
                     $donation->status = 'cancelled';
                     $donation->save();
 

@@ -59,4 +59,40 @@ class MaraudeProductController extends Controller
     return response()->json($produits);
 }
 
+public function removeProductFromMaraude(Request $request, $maraudeId, $productId)
+{
+    $maraude = Maraude::findOrFail($maraudeId);
+    $produit = Produit::findOrFail($productId);
+    $warehouse = Warehouse::findOrFail($produit->warehouse_id);
+
+    $request->validate([
+        'quantity' => 'required|integer|min:1',
+    ]);
+
+    $data = $request->all();
+
+    if ($data['quantity'] > $produit->quantity) {
+        return response()->json(['message' => 'Quantité insuffisante en stock pour ce produit'], 400);
+    }
+
+    $produit->quantity += $data['quantity'];
+    $produit->save();
+
+    $warehouse->actual_capacity -= $data['quantity'];
+    $warehouse->save();
+
+    $maraude->produits()->detach($produit->id);
+
+    return response()->json(['message' => 'Produit retiré de la maraude avec succès'], 200);
+
+}
+
+public function GetProductFromMaraude(Request $request, $maraudeId,)
+{
+    $maraude = Maraude::findOrFail($maraudeId);
+    $produits = $maraude->produits;
+
+    return response()->json($produits);
+}
+
 }

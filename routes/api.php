@@ -80,13 +80,6 @@ Route::post('/demand', [RegisterController::class, 'resgisterUser']);
 Route::post('/login', [LoginController::class, 'login']);
 
 
-//stock
-// Route::post('/stock', [StockController::class, 'addProduct']);
-// Route::get('/stock', [StockController::class, 'indexP']);
-// Route::get('/stock/{id}', [StockController::class, 'showP']);
-// Route::delete('/stock/{id}', [StockController::class, 'destroyP']);
-// Route::patch('/stock/{id}', [StockController::class, 'updateP']);
-
 //activity
 Route::post('/act', [ActivityController::class, 'addActivity']);
 Route::get('/act', [ActivityController::class, 'indexA']);
@@ -131,7 +124,7 @@ Route::delete('/stock/{id}', [StockController::class, 'removeProductFromWarehous
 
 Route::post('/maraude/prod/{maraudeId}', [MaraudeProductController::class, 'addProductToMaraude']);
 Route::get('/maraude/prod/{maraudeId}', [MaraudeProductController::class, 'showProduits']);
-//Route::get('/maraude/{maraudeId}', [MaraudeProduitController::class, 'getProductsByMaraudeId']);
+Route::delete('/maraude/prod/{maraudeId}/{productId}', [MaraudeProductController::class, 'removeProductFromMaraude']);
 
 //Maraude
 Route::get('/maraudes', [MaraudeController::class, 'index']);
@@ -139,3 +132,13 @@ Route::post('/maraudes', [MaraudeController::class, 'store']);
 Route::get('/maraudes/{id}', [MaraudeController::class, 'show']);
 Route::patch('/maraudes/{id}', [MaraudeController::class, 'update']);
 Route::delete('/maraudes/{id}', [MaraudeController::class, 'destroy']);
+
+//Vehicle
+Route::get('/vehicules', [VehiculeController::class, 'index']);
+Route::post('/vehicules', [VehiculeController::class, 'store']);
+Route::get('/vehicules/{id}', [VehiculeController::class, 'show']);
+Route::patch('/vehicules/{id}', [VehiculeController::class, 'update']);
+Route::delete('/vehicules/{id}', [VehiculeController::class, 'destroy']);
+
+//Makeformation
+Route::post('/makeFormation', [MakeFormationController::class, 'makeFormation']);
