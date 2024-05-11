@@ -36,7 +36,7 @@ use App\Http\Controllers\AttachmentController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-
+Route::post('/admin/user', [UserController::class, 'addUser']);
 
 Route::middleware(['auth:sanctum',checkRole::class . ':0'])->group(function () {
     // Users
