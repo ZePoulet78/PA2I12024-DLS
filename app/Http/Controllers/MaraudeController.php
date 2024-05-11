@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Maraude;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
 
 class MaraudeController extends Controller
 {
@@ -22,43 +21,53 @@ class MaraudeController extends Controller
 
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'maraud_date' => 'required|date',
-            'departure_time' => 'required',
-            'return_time' => 'required',
+        $this->validate($request, [
+            'maraud_date' => 'required|date_format:Y-m-d',
+            'departure_time' => 'required|date_format:H:i',
+            'return_time' => 'required|date_format:H:i|after:departure_time',
             'itinerary' => 'required|string',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
-        }
+        $data = $request->all();
 
-        $maraude = Maraude::create($validator->validated());
-        return response()->json($maraude, 201);
+        $maraude = new Maraude();
+        $maraude->maraud_date = $data['maraud_date'];
+        $maraude->departure_time = $data['departure_time'];
+        $maraude->return_time = $data['return_time'];
+        $maraude->itinerary = $data['itinerary'];
+        $maraude->save();
+
+        return response()->json(['message' => 'Maraude ajoutée avec succès', 'data' => $maraude], 201);
     }
 
     public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
+        $maraude = Maraude::findOrFail($id);
+
+        $this->validate($request, [
             'maraud_date' => 'required|date',
             'departure_time' => 'required',
             'return_time' => 'required',
             'itinerary' => 'required|string',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
-        }
+        $data = $request->all();
 
-        $maraude = Maraude::findOrFail($id);
-        $maraude->update($validator->validated());
-        return response()->json($maraude, 200);
+        $maraude->fill([
+            'maraud_date' => $data['maraud_date'],
+            'departure_time' => $data['departure_time'],
+            'return_time' => $data['return_time'],
+            'itinerary' => $data['itinerary'],
+        ]);
+        $maraude->save();
+
+        return response()->json(['message' => 'Maraude modifiée avec succès', 'data' => $maraude], 200);
     }
 
     public function destroy($id)
     {
         $maraude = Maraude::findOrFail($id);
         $maraude->delete();
-        return response()->json(null, 204);
+        return response()->json(['message' => 'Maraude supprimée avec succès'], 204);
     }
 }

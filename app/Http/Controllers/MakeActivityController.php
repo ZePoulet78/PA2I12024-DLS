@@ -74,4 +74,15 @@ class MakeActivityController extends Controller
 
         return response()->json(['users' => $users]);
     }
+
+    public function GetActivityIdByUserId($user_id)
+    {
+        $activities = MakeActivity::where('user_id', $user_id)->get();
+
+        if (!$activities) {
+            return response()->json(['message' => 'activity not found'], 404);
+        }
+
+        return response()->json(['activity' => $activities]);
+    }
 }

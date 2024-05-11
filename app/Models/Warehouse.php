@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Warehouse extends Model
 {
-    protected $fillable = ['nom_entrepot', 'adresse_entrepot', 'superficie_entrepot'];
+    protected $fillable = ['name', 'address', 'actual_capacity', 'max_capacity'];
 }

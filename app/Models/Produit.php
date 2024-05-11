@@ -15,11 +15,16 @@ class Produit extends Model
         'name',
         'quantity',
         'expiration_date',
-        'id_entrepot',
+        'warehouse_id',
     ];
 
     public function entrepot()
     {
-        return $this->belongsTo(Entrepot::class, 'id_entrepot');
+        return $this->belongsTo(Entrepot::class, 'warehouse_id');
+    }
+
+    public function maraudes()
+    {
+        return $this->belongsToMany(Maraude::class, 'maraude_produit', 'produit_id', 'maraude_id')->withPivot('quantity');
     }
 }

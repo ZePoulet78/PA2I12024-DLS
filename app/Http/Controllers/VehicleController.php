@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Vehicle;
+use App\Models\Warehouse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -20,45 +21,57 @@ class VehicleController extends Controller
         return response()->json($vehicle);
     }
 
-    public function store(Request $request)
+    public function store(Request $request, $warehouseId)
     {
-        $validator = Validator::make($request->all(), [
+        $warehouse = Warehouse::findOrFail($warehouseId);
+
+        $this->validate($request, [
             'registration_number' => 'required|string|max:255',
             'model' => 'required|string|max:255',
             'year' => 'required|integer',
-            'warehouse_id' => 'required|exists:warehouses,id',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
-        }
+        $data = $request->all();
 
-        $vehicle = Vehicle::create($validator->validated());
-        return response()->json($vehicle, 201);
+        $vehicle = new Vehicle();
+        $vehicle->registration_number = $data['registration_number'];
+        $vehicle->model = $data['model'];
+        $vehicle->year = $data['year'];
+        $vehicle->warehouse_id = $warehouseId;
+        $vehicle->save();
+
+        return response()->json(['message' => 'Véhicule ajouté avec succès', 'data' => $vehicle], 201);
     }
 
     public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
+        $vehicle = Vehicle::findOrFail($id);
+        $warehouse = Warehouse::findOrFail($vehicle->warehouse_id);
+
+        $this->validate($request, [
             'registration_number' => 'required|string|max:255',
             'model' => 'required|string|max:255',
             'year' => 'required|integer',
             'warehouse_id' => 'required|exists:warehouses,id',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
-        }
+        $data = $request->all();
 
-        $vehicle = Vehicle::findOrFail($id);
-        $vehicle->update($validator->validated());
-        return response()->json($vehicle, 200);
+        $vehicle->fill([
+            'registration_number' => $data['registration_number'],
+            'model' => $data['model'],
+            'year' => $data['year'],
+            'warehouse_id' => $data['warehouse_id'],
+        ]);
+        $vehicle->save();
+
+        return response()->json(['message' => 'Véhicule modifié avec succès', 'data' => $vehicle], 200);
     }
 
     public function destroy($id)
     {
         $vehicle = Vehicle::findOrFail($id);
         $vehicle->delete();
-        return response()->json(null, 204);
+        return response()->json(['message' => 'Véhicule supprimé avec succès'], 200);
     }
 }

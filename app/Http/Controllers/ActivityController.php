@@ -115,4 +115,5 @@ class ActivityController extends Controller
 
         return response()->json(['message' => 'activity deleted successfully'], 201);
     }
+    
 }

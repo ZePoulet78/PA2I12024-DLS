@@ -43,7 +43,6 @@ class UserController extends Controller
         return response()->json(['message' => 'user created successfully', 'data' => $user], 201);
     }
 
-    // fonction pour voir listé les users
 
     public function index()
     {
@@ -65,8 +64,6 @@ class UserController extends Controller
         }
         return response()->json(['user' => $user]);
     }
-
-    //fonction de modification
 
     public function update(Request $request, $id){
 

@@ -16,15 +16,26 @@ class EntrepotController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nom_entrepot' => 'required',
-            'adresse_entrepot' => 'required',
-            'superficie_entrepot' => 'required|numeric|min:0',
+            'name' => 'required',
+            'address' => 'required',
+            'max_capacity' => 'required|numeric|min:0',
         ]);
 
-        $entrepot = Warehouse::create($request->all());
-
-        return response()->json($entrepot, 201);
+        try {
+            $entrepot = Warehouse::create([
+                'name' => $request->name,
+                'address' => $request->address,
+                'max_capacity' => $request->max_capacity,
+                'actual_capacity' => $request->max_capacity,
+            ]);
+    
+            return response()->json($entrepot, 201);
+        } catch (\Exception $e) {
+            
+            return response()->json(['error' => 'Failed to create warehouse.'], 500);
+        }
     }
+    
 
     public function show($id)
     {
@@ -35,14 +46,19 @@ class EntrepotController extends Controller
     public function update(Request $request, $id)
     {
         $entrepot = Warehouse::findOrFail($id);
-
         $request->validate([
-            'nom_entrepot' => 'required',
-            'adresse_entrepot' => 'required',
-            'superficie_entrepot' => 'required|numeric|min:0',
+            'name' => 'required',
+            'address' => 'required',
+            'max_capacity' => 'required|numeric|min:0',
         ]);
 
-        $entrepot->update($request->all());
+        $actual_capacity = $entrepot->actual_capacity + ($request->max_capacity - $entrepot->max_capacity);
+        $entrepot->update([
+            'name' => $request->name,
+            'address' => $request->address,
+            'max_capacity' => $request->max_capacity,
+            'actual_capacity' => $actual_capacity, 
+        ]);
 
         return response()->json($entrepot, 200);
     }
@@ -51,6 +67,6 @@ class EntrepotController extends Controller
     {
         $entrepot = Warehouse::findOrFail($id);
         $entrepot->delete();
-        return response()->json(null, 204);
+        return response()->json(['message' => 'Delete with success.'], 200);
     }
 }

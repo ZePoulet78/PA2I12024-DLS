@@ -71,5 +71,15 @@ class MakeFormationController extends Controller
 
         return response()->json(['users' => $users]);
     }
-    
+
+    public function GetFormationByIdUser($user_id)
+    {
+        $formations = MakeFormation::where('user_id', $user_id)->get();
+        if (!$formations) {
+            return response()->json(['message' => 'user not found'], 404);
+        }
+
+        return response()->json(['formations' => $formations]);
+    } 
+      
 }

@@ -12,6 +12,9 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\MakeActivityController;
 use App\Http\Controllers\MakeFormationController;
+use App\Http\Controllers\EntrepotController;
+use App\Http\Controllers\MaraudeProductController;
+
 
 
 /*
@@ -78,11 +81,11 @@ Route::post('/login', [LoginController::class, 'login']);
 
 
 //stock
-Route::post('/stock', [StockController::class, 'addProduct']);
-Route::get('/stock', [StockController::class, 'indexP']);
-Route::get('/stock/{id}', [StockController::class, 'showP']);
-Route::delete('/stock/{id}', [StockController::class, 'destroyP']);
-Route::patch('/stock/{id}', [StockController::class, 'updateP']);
+// Route::post('/stock', [StockController::class, 'addProduct']);
+// Route::get('/stock', [StockController::class, 'indexP']);
+// Route::get('/stock/{id}', [StockController::class, 'showP']);
+// Route::delete('/stock/{id}', [StockController::class, 'destroyP']);
+// Route::patch('/stock/{id}', [StockController::class, 'updateP']);
 
 //activity
 Route::post('/act', [ActivityController::class, 'addActivity']);
@@ -95,13 +98,44 @@ Route::patch('/act/{id}', [ActivityController::class, 'updateA']);
 Route::post('/makeActivity', [MakeActivityController::class, 'makeActivity']);
 Route::get('/makeActivity', [MakeActivityController::class, 'indexMa']);
 Route::get('/makeActivity/{id}', [MakeActivityController::class, 'GetUsersIdByActivityId']);
-
+Route::get('/makeActivity/{id}', [MakeActivityController::class, 'GetUsersIdByActivityId']);
 
 //Faire Formation
 Route::post('/makeFormation', [MakeFormationController::class, 'makeFormation']);
 Route::get('/makeFormation', [MakeFormationController::class, 'indexMf']);
+Route::get('/makeFormation/{id}', [MakeFormationController::class, 'GetUserByIdFormation']);
 
 
 Route::post('/donations', [DonationController::class, 'createDonation'])->name('donations.create');
 Route::get('/donations/success', [DonationController::class, 'handleSuccessfulDonation'])->name('donations.success');
 Route::get('/donations/cancel', [DonationController::class, 'handleCancelledDonation'])->name('donations.cancel');
+
+//ENTREPOT MARAUDE
+
+Route::get('/entrepots', [EntrepotController::class, 'index']);
+Route::post('/entrepots', [EntrepotController::class, 'store']);
+Route::get('/entrepots/{id}', [EntrepotController::class, 'show']);
+Route::patch('/entrepots/{id}', [EntrepotController::class, 'update']);
+Route::delete('/entrepots/{id}', [EntrepotController::class, 'destroy']);
+
+//Stock
+Route::get('/stock/true', [StockController::class, 'indexP']);
+Route::get('/stock/false', [StockController::class, 'indexProdStock']);
+Route::post('/stock/post/{id}', [StockController::class, 'addProductToWarehouse']);
+Route::get('/stock/{id}', [StockController::class, 'showP']);
+
+//Route::patch('/stock/{id}', [StockController::class, 'update']);
+Route::put('/stock/del/{id}', [StockController::class, 'RemoveQuantityFromStock']);
+Route::put('/stock/add/{id}', [StockController::class, 'addQuantityToStock']);
+Route::delete('/stock/{id}', [StockController::class, 'removeProductFromWarehouse']);
+
+Route::post('/maraude/prod/{maraudeId}', [MaraudeProductController::class, 'addProductToMaraude']);
+Route::get('/maraude/prod/{maraudeId}', [MaraudeProductController::class, 'showProduits']);
+//Route::get('/maraude/{maraudeId}', [MaraudeProduitController::class, 'getProductsByMaraudeId']);
+
+//Maraude
+Route::get('/maraudes', [MaraudeController::class, 'index']);
+Route::post('/maraudes', [MaraudeController::class, 'store']);
+Route::get('/maraudes/{id}', [MaraudeController::class, 'show']);
+Route::patch('/maraudes/{id}', [MaraudeController::class, 'update']);
+Route::delete('/maraudes/{id}', [MaraudeController::class, 'destroy']);

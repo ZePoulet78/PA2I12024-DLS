@@ -17,4 +17,9 @@ class Maraude extends Model
         'return_time',
         'itinerary',
     ];
+
+    public function produits()
+    {
+        return $this->belongsToMany(Produit::class, 'maraude_produit', 'maraude_id', 'produit_id')->withPivot('quantity');
+    }
 }
