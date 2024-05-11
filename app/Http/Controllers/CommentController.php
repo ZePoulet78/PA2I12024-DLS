@@ -53,4 +53,16 @@ class CommentController extends Controller
             'user' => $user,
     ], 201);
     }
+
+    public function destroy($ticketId, $commentId)
+    {
+        $comment = Comment::where('ticket_id', $ticketId)->where('id', $commentId)->first();
+
+        if($comment) {
+            $comment->delete();
+            return response()->json(['message' => 'Comment deleted'], 200);
+        }
+
+        return response()->json(['message' => 'Comment not found'], 404);
+    }
 }

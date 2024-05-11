@@ -111,29 +111,28 @@ Route::middleware(['auth:sanctum', CheckItRole::class])->group(function () {
     Route::get('/it/tickets/{id}', [TicketController::class, 'show']);
 
     Route::get('/it/tickets/category/{id}', [TicketController::class, 'getTicketByCategory']);
+    Route::get('/it/ticket-categories', [TicketCatgoryController::class, 'index']);
 
     Route::get('/it/tickets/status/{status}', [TicketController::class, 'getTicketByStatus']);
-    Route::get('/it/tickets/priority/{priority}', [TicketController::class, 'getTicketByPriority']);
+    Route::patch('/it/tickets/{id}/status', [TicketController::class, 'changeStatus']);
     
+    Route::get('/it/tickets/priority/{priority}', [TicketController::class, 'getTicketByPriority']);
+        Route::patch('/it/tickets/{id}/priority', [TicketController::class, 'changePriority']);
+
     Route::get('/it/tickets/{id}/attachments', [TicketController::class, 'getTicketAttachments']);
 
     Route::get('/it/tickets/{id}/comments', [TicketController::class, 'getTicketComments']);
     
-    // get assigned user
     Route::get('/it/tickets/{id}/assigned', [TicketController::class, 'getAssignedUser']);
+    Route::get('/it/tickets/assigned/{id}', [TicketController::class, 'getTicketByAssigned']);
+    Route::patch('/it/tickets/{id}/assign', [TicketController::class, 'assignTicket']);
 
     Route::patch('/it/tickets/{id}', [TicketController::class, 'update']);
     Route::delete('/it/tickets/{id}', [TicketController::class, 'destroy']);
 
-    Route::patch('/it/tickets/{id}/priority', [TicketController::class, 'changePriority']);
-    Route::patch('/it/tickets/{id}/assign', [TicketController::class, 'assignTicket']);
-    Route::patch('/it/tickets/{id}/status', [TicketController::class, 'changeStatus']);
 
-    // get ticket categories
-    Route::get('/it/ticket-categories', [TicketCatgoryController::class, 'index']);
 
-    // get ticket by assigned user
-    Route::get('/it/tickets/assigned/{id}', [TicketController::class, 'getTicketByAssigned']);
+
 });
 
 Route::middleware('auth:sanctum')->group(function () {

@@ -61,6 +61,10 @@ class TicketController extends Controller
 
         $ticket = Ticket::find($id);
 
+        if(!$ticket) {
+            return response()->json(['message' => 'Ticket not found'], 404);
+        }
+
         $user = User::find($ticket->user_id);
 
         $tech = User::find($ticket->assigned_to);
