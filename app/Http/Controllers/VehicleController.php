@@ -21,23 +21,27 @@ class VehicleController extends Controller
         return response()->json($vehicle);
     }
 
-    public function store(Request $request, $warehouseId)
+    public function store(Request $request)
     {
-        $warehouse = Warehouse::findOrFail($warehouseId);
+        $warehouse = Warehouse::findOrFail($request->warehouse_id);
 
         $this->validate($request, [
-            'registration_number' => 'required|string|max:255',
-            'model' => 'required|string|max:255',
+            'registration_number' => 'required|string|min:9|max:9',
             'year' => 'required|integer',
+            'warehouse_id' => 'required|exists:warehouses,id',
         ]);
 
         $data = $request->all();
+
+        $validator = Validator::make($data, [
+            'registration_number' => 'regex:/^[A-Z]{2}-[0-9]{3}-[A-Z]{2}$/'
+        ]);
 
         $vehicle = new Vehicle();
         $vehicle->registration_number = $data['registration_number'];
         $vehicle->model = $data['model'];
         $vehicle->year = $data['year'];
-        $vehicle->warehouse_id = $warehouseId;
+        $vehicle->warehouse_id = $warehouse->id;
         $vehicle->save();
 
         return response()->json(['message' => 'Véhicule ajouté avec succès', 'data' => $vehicle], 201);
@@ -49,13 +53,17 @@ class VehicleController extends Controller
         $warehouse = Warehouse::findOrFail($vehicle->warehouse_id);
 
         $this->validate($request, [
-            'registration_number' => 'required|string|max:255',
+            'registration_number' => 'required|string|min:9|max:9',
             'model' => 'required|string|max:255',
             'year' => 'required|integer',
             'warehouse_id' => 'required|exists:warehouses,id',
         ]);
 
         $data = $request->all();
+
+        $validator = Validator::make($data, [
+            'registration_number' => 'regex:/^[A-Z]{2}-[0-9]{3}-[A-Z]{2}$/'
+        ]);
 
         $vehicle->fill([
             'registration_number' => $data['registration_number'],

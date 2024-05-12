@@ -18,22 +18,20 @@ class EntrepotController extends Controller
         $request->validate([
             'name' => 'required',
             'address' => 'required',
-            'max_capacity' => 'required|numeric|min:0',
+            'max_capacity' => 'required|numeric|min:0'
         ]);
 
-        try {
-            $entrepot = Warehouse::create([
-                'name' => $request->name,
-                'address' => $request->address,
-                'max_capacity' => $request->max_capacity,
-                'actual_capacity' => $request->max_capacity,
-            ]);
-    
+        $entrepot = new Warehouse();
+        $entrepot->name = $request->name;
+        $entrepot->address = $request->address;
+        $entrepot->max_capacity = $request->max_capacity;
+        $entrepot->actual_capacity = $request->max_capacity;
+        $entrepot->save();
+
+        if($entrepot){
             return response()->json($entrepot, 201);
-        } catch (\Exception $e) {
-            
-            return response()->json(['error' => 'Failed to create warehouse.'], 500);
         }
+
     }
     
 

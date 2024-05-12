@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMakeMaraudesTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -20,7 +20,7 @@ class CreateMakeMaraudesTable extends Migration
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('maraude_id')->references('id')->on('maraudes')->onDelete('cascade');
+            $table->foreign('maraude_id')->references('id')->on('maraude')->onDelete('cascade');
         });
     }
 
@@ -33,4 +33,4 @@ class CreateMakeMaraudesTable extends Migration
     {
         Schema::dropIfExists('make_maraudes');
     }
-}
+};
