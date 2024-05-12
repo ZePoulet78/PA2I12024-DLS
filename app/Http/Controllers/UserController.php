@@ -129,4 +129,20 @@ class UserController extends Controller
         return response()->json(['roles' => $user->roles]);
     }
 
+    
+    public function getAuthUser()
+    {
+        return response()->json(['user' => Auth::user()]);
+    }
+
+    public function getAythUserRoles()
+    {
+        
+        if (!Auth::user()->roles) {
+            return response()->json(['roles' => []]);
+        }
+
+        return response()->json(['roles' => Auth::user()->roles]);
+    }
+
 }

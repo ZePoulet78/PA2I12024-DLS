@@ -27,7 +27,7 @@ class RoleController extends Controller
             return response()->json(['message' => 'Role not found'], 404);
         }
 
-        return response()->json(['role' => $roles], 200);
+        return response()->json(['role' => $role], 200);
     }
 
     public function store(Request $request)

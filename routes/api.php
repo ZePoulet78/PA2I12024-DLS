@@ -19,16 +19,20 @@ use App\Http\Controllers\MaraudeProductController;
 
 
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\DonationController;
 use App\Http\Controllers\HasRoleController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TicketCatgoryController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\AttachmentController;
+use App\Http\Controllers\VehicleController;
+use App\Http\Controllers\CollectController;
+
 
 /*
 |--------------------------------------------------------------------------
-| API Routes
+| API Routes                                                              |
 |--------------------------------------------------------------------------
 |
 | Here is where you can register API routes for your application. These
@@ -46,8 +50,10 @@ Route::middleware(['auth:sanctum',checkRole::class . ':0'])->group(function () {
     Route::delete('/admin/user/{user}', [UserController::class, 'destroy']);
     Route::patch('/admin/user/{user}', [UserController::class, 'update']);
 
-    Route::post('admin/user/{id}/role', [HasRoleController::class, 'assignRole']);
-
+    Route::get('/admin/user/{id}/role', [UserController::class, 'getUserRole']);
+    Route::delete('/admin/user/{user}/role/{role}', [HasRoleController::class, 'deleteRole']);
+    Route::post('/admin/user/{id}/role', [HasRoleController::class, 'assignRole']);
+    Route::get('/role/{id}', [HasRoleController::class, 'showUsers']);
 
     // Register / Demandes
     Route::post('/admin/demand/a/{id}', [RegisterController::class, 'approveUser']);
@@ -83,9 +89,9 @@ Route::middleware(['auth:sanctum',checkRole::class . ':0'])->group(function () {
     Route::delete('/entrepots/{id}', [EntrepotController::class, 'destroy']);
 
     // Vehicules
-    Route::post('/vehicules', [VehiculeController::class, 'store']);
-    Route::patch('/vehicules/{id}', [VehiculeController::class, 'update']);
-    Route::delete('/vehicules/{id}', [VehiculeController::class, 'destroy']);
+    Route::post('/vehicules', [VehicleController::class, 'store']);
+    Route::patch('/vehicules/{id}', [VehicleController::class, 'update']);
+    Route::delete('/vehicules/{id}', [VehicleController::class, 'destroy']);
 
     //ENTREPOT MARAUDE
     Route::post('/maraude/prod/{maraudeId}', [MaraudeProductController::class, 'addProductToMaraude']);
@@ -98,6 +104,15 @@ Route::middleware(['auth:sanctum',checkRole::class . ':0'])->group(function () {
     Route::patch('/maraudes/{id}', [MaraudeController::class, 'update']);
     Route::delete('/maraudes/{id}', [MaraudeController::class, 'destroy']);
 
+    // Collect
+    Route::get('/collects', [CollectController::class, 'index']);
+    Route::post('/collects', [CollectController::class, 'store']);
+    Route::get('/collect/{id}', [CollectController::class, 'show']);
+    Route::patch('/collects/{id}', [CollectController::class, 'update']);
+    Route::delete('/collects/{id}', [CollectController::class, 'destroy']);
+
+    // addRoutePlan
+    Route::put('/collect/{id}/route', [CollectController::class, 'addRoutePlan']);
 
 });
 
@@ -155,11 +170,14 @@ Route::middleware(['auth:sanctum', checkRole::class . ':0,1'])->group(function (
     Route::delete('/stock/{id}', [StockController::class, 'removeProductFromWarehouse']);
 
     // Voir Vehicules
-    Route::get('/vehicules', [VehiculeController::class, 'index']);
-    Route::get('/vehicules/{id}', [VehiculeController::class, 'show']);
+    Route::get('/vehicules', [VehicleController::class, 'index']);
+    Route::get('/vehicules/{id}', [VehicleController::class, 'show']);
 
     // voir produits dans les maraudes
     Route::get('/maraude/prod/{maraudeId}', [MaraudeProductController::class, 'showProduits']);
+
+    // Voir collectes du camionneur
+    Route::get('/user/{id}/collects', [CollectController::class, 'getUsersCollects']);
 
 
 });
@@ -202,7 +220,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 });
 
-Route::middleware('auth:sanctum', checkRole::class . ':0,2')->group(function () {
+Route::middleware(['auth:sanctum', checkRole::class . ':0,2'])->group(function () {
     // Activity
     Route::post('/act', [ActivityController::class, 'addActivity']);
     Route::get('/act', [ActivityController::class, 'indexA']);
