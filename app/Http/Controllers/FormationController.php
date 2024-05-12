@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Formation;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class FormationController extends Controller
 {
@@ -75,10 +76,10 @@ class FormationController extends Controller
                 'lieu' => 'required|string',
             ]);
 
-            $today = Carbon::today()->format('Y-m-d');
-            if ($request->date_debut < $today) {
-                return response()->json(['message' => 'La date de la formation ne peut pas être antérieure à aujourd\'hui.'], 400);
-            }
+            // $today = Carbon::today()->format('Y-m-d');
+            // if ($request->date_debut < $today) {
+            //     return response()->json(['message' => 'La date de la formation ne peut pas être antérieure à aujourd\'hui.'], 400);
+            // }
 
             $start = strtotime($request->date_debut . ' 00:00:00');
             $end = strtotime($request->date_fin . ' 23:59:59');

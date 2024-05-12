@@ -82,7 +82,6 @@ class UserController extends Controller
             'firstname' => 'required|string|max:255',
             'lastname' => 'required|string|max:255',
             'email' => 'required|string|max:255',
-            'password' => 'required|string|min:8',
             'tel' => 'required|string|min:10|max:10',
         ]);
 
@@ -97,7 +96,6 @@ class UserController extends Controller
             'firstname' => $data['firstname'],
             'lastname' => $data['lastname'],
             'email' => $data['email'],
-            'password' => Hash::make($data['password']),
             'tel' => $data['tel']
         ]);
         

@@ -36,7 +36,7 @@ use App\Http\Controllers\AttachmentController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-Route::post('/admin/user', [UserController::class, 'addUser']);
+
 
 Route::middleware(['auth:sanctum',checkRole::class . ':0'])->group(function () {
     // Users
@@ -119,11 +119,10 @@ Route::middleware(['auth:sanctum', checkRole::class . ':0,1'])->group(function (
     Route::get('/attachments/{id}', [AttachmentController::class, 'show']);
 
     // Stock
-    Route::post('/stock', [StockController::class, 'addProduct']);
-    Route::get('/stock', [StockController::class, 'indexP']);
-    Route::get('/stock/{id}', [StockController::class, 'showP']);
-    Route::delete('/stock/{id}', [StockController::class, 'destroyP']);
-    Route::patch('/stock/{id}', [StockController::class, 'updateP']);
+    // Route::post('/stock', [StockController::class, 'addProduct']);
+    // Route::get('/stock/{id}', [StockController::class, 'showP']);
+    // Route::delete('/stock/{id}', [StockController::class, 'destroyP']);
+    // Route::patch('/stock/{id}', [StockController::class, 'updateP']);
 
     // Formation
     Route::get('/formations', [FormationController::class, 'index']);
@@ -146,6 +145,7 @@ Route::middleware(['auth:sanctum', checkRole::class . ':0,1'])->group(function (
     //Stock
     Route::get('/stock/true', [StockController::class, 'indexP']);
     Route::get('/stock/false', [StockController::class, 'indexProdStock']);
+    Route::get('/stock/warehouse/{warehouseId}', [StockController::class, 'GetProdByWarehouse']);
     Route::post('/stock/post/{id}', [StockController::class, 'addProductToWarehouse']);
     Route::get('/stock/{id}', [StockController::class, 'showP']);
 

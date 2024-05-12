@@ -5,10 +5,17 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Activity;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class ActivityController extends Controller
 {
     public function addActivity(Request $request){
+
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
 
         $this->validate($request,[
             'heure_debut' => 'required|date_format:H:i',
@@ -33,6 +40,7 @@ class ActivityController extends Controller
         $act->date = $data['date'];
         $act->type = $data['type'];
         $act->description = $data['description'];
+        $act->user_id = $user->id;;
         $act->save();
         
         return response()->json(['message' => 'Activity created successfully', 'activity' => $act], 201);
@@ -78,10 +86,10 @@ class ActivityController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        $today = Carbon::today()->format('Y-m-d');
-        if ($data['date'] < $today) {
-            return response()->json(['message' => 'La date de l\'activité ne peut pas être antérieure à aujourd\'hui.'], 400);
-        }
+        // $today = Carbon::today()->format('Y-m-d');
+        // if ($data['date'] < $today) {
+        //     return response()->json(['message' => 'La date de l\'activité ne peut pas être antérieure à aujourd\'hui.'], 400);
+        // }
     
         $data = $request->all();
         $heureDebut = Carbon::parse($data['heure_debut'])->format('H:i');

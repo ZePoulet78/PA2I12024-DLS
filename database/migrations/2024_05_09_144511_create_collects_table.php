@@ -12,7 +12,7 @@ class CreateCollectsTable extends Migration
             $table->id();
             $table->date('date');
             $table->unsignedBigInteger('id_vehicule');
-            $table->foreign('id_vehicule')->references('id')->on('vehicules');
+            $table->foreign('id_vehicule')->references('id')->on('vehicles');
             $table->unsignedBigInteger('id_user');
             $table->foreign('id_user')->references('id')->on('users');
             $table->string('plan_de_route');

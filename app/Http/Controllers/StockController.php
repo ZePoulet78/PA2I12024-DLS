@@ -30,7 +30,7 @@ class StockController extends Controller
         $prod->quantity = $data['quantity'];
         $prod->expiration_date = $data['expiration_date'];
         $prod->warehouse_id = $warehouseId;
-        $prod->belongs_to_maraude = 1;
+        $prod->belongs_to_maraude = 0;
         $prod->save();
 
         $warehouse->actual_capacity -= $data['quantity'];
@@ -71,6 +71,19 @@ class StockController extends Controller
         if (!$prod) {
             return response()->json(['message' => 'Aucun produit trouvé'], 404);
         }
+        return response()->json(['prod' => $prod]);
+    }
+
+    public function GetProdByWarehouse($warehouseId)
+    {
+        $prod = Produit::where('belongs_to_maraude', false)
+                        ->where('warehouse_id', $warehouseId)
+                        ->get();
+    
+        if (!$prod) {
+            return response()->json(['message' => 'Aucun produit trouvé'], 404);
+        }
+    
         return response()->json(['prod' => $prod]);
     }
 
@@ -141,8 +154,12 @@ class StockController extends Controller
         $warehouse->actual_capacity = $warehouse->actual_capacity + $data['quantity'];
         $warehouse->save();
 
+        if ($prod->quantity - $data['quantity'] < 0) {
+            return response()->json(['message' => 'La quantité du produit serait négative'], 400);
+        }
+
         $prod->fill([
-            'quantity' => $data['quantity'] - $prod->quantity,
+            'quantity' => ( $prod->quantity)-($data['quantity']) ,
             'warehouse_id' => $prod->warehouse_id,
         ]);
         $prod->save();

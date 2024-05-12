@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('activity', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->time('heure_debut');
             $table->time('heure_fin');
             $table->date('date');
