@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use App\Models\Document;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class DocumentController extends Controller
 {
@@ -29,11 +30,12 @@ class DocumentController extends Controller
             $filePath = 'uploads/proofs/' . $userId . '/' . $fileName;
 
             Storage::disk('s3')->putFileAs('uploads/proofs/' . $userId, $file, $fileName, 'public');
+            
 
             $document = new Document();
             $document->user_id = $userId;
             $document->title = $request->title;
-            $document->document = $filePath;
+            $document->document = Storage::disk('s3')->url($filePath);
             $document->save();
 
             return response()->json(['success' => 'File uploaded successfully']);
@@ -42,23 +44,52 @@ class DocumentController extends Controller
         return response()->json(['error' => 'No file uploaded or invalid file']);
     }
 
-    public function delete(Request $request){
+    public function delete($id){
         $userId = Auth::id();
 
         if (!$userId) {
             return response()->json(['error' => 'User not authenticated'], 401);
         }
 
-        $document = Document::where('user_id', $userId)->where('id', $request->id)->first();
+        $document = Document::where('user_id', $userId)->where('id', $id)->first();
 
         if (!$document) {
             return response()->json(['error' => 'Document not found'], 404);
         }
 
-        Storage::disk('s3')->delete($document->document);
+        Storage::disk('s3')->delete($document->file);
 
         $document->delete();
 
         return response()->json(['success' => 'Document deleted successfully']);
+    }
+
+    public function destroy($id)
+    {
+        $document = Document::find($id);
+
+        if (!$document) {
+            return response()->json(['error' => 'Document not found'], 404);
+        }
+
+        Storage::disk('s3')->delete($document->file);
+
+        $document->delete();
+
+        return response()->json(['success' => 'Document deleted successfully']);
+    }
+
+    
+    public function list($id){
+        $userId = User::findOrFail($id)->id;
+
+        if (!$userId) {
+            return response()->json(['error' => 'User not found'], 401);
+        }
+
+        $documents = Document::where('user_id', $userId)->get();
+
+
+        return response()->json(['documents '=>$documents]);
     }
 }

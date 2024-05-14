@@ -63,7 +63,6 @@ Route::middleware(['auth:sanctum',checkRole::class . ':0'])->group(function () {
 
 
 
-
     // Formation
     Route::post('/formations', [FormationController::class, 'store']);
     Route::patch('/formations/{id}', [FormationController::class, 'update']);
@@ -179,7 +178,11 @@ Route::middleware(['auth:sanctum', checkRole::class . ':0,1'])->group(function (
     // Voir collectes du camionneur
     Route::get('/user/{id}/collects', [CollectController::class, 'getUsersCollects']);
 
+    Route::get('/admin/document/{id}', [DocumentController::class, 'list']);
 
+    Route::delete('/admin/document/{id}', [DocumentController::class, 'delete']);
+
+    Route::delete('/admin/document/user/{id}', [DocumentController::class, 'destroy']);
 });
 
 Route::middleware(['auth:sanctum', CheckItRole::class])->group(function () {
@@ -215,7 +218,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [LoginController::class, 'logout']);
     Route::get('/user', [UserController::class, 'getCurrentUser']);
     Route::post('/document/upload', [DocumentController::class, 'upload']);
-    Route::delete('/document/delete', [DocumentController::class, 'delete']);
+    Route::delete('/document/user/{id}', [DocumentController::class, 'delete']);
 
 
 });
