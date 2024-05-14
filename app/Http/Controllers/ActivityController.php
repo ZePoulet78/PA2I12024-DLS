@@ -42,7 +42,7 @@ class ActivityController extends Controller
         $act->description = $data['description'];
         $act->user_id = $user->id;;
         $act->save();
-        
+    
         return response()->json(['message' => 'Activity created successfully', 'activity' => $act], 201);
     }
 

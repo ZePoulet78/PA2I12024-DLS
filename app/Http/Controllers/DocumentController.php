@@ -61,4 +61,17 @@ class DocumentController extends Controller
 
         return response()->json(['success' => 'Document deleted successfully']);
     }
+
+    public function list(Request $request, $id){
+        $userId = User::findOrFail($id)->id;
+
+        if (!$userId) {
+            return response()->json(['error' => 'User not found'], 401);
+        }
+
+        $documents = Document::where('user_id', $userId)->get();
+
+
+        return response()->json($documents);
+    }
 }

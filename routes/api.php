@@ -50,6 +50,10 @@ Route::middleware(['auth:sanctum',checkRole::class . ':0'])->group(function () {
     Route::delete('/admin/user/{user}', [UserController::class, 'destroy']);
     Route::patch('/admin/user/{user}', [UserController::class, 'update']);
 
+
+    // Document by user
+    Route::get('/admin/document/{id}', [DocumentController::class, 'list']);
+
     Route::get('/admin/user/{id}/role', [UserController::class, 'getUserRole']);
     Route::delete('/admin/user/{user}/role/{role}', [HasRoleController::class, 'deleteRole']);
     Route::post('/admin/user/{id}/role', [HasRoleController::class, 'assignRole']);
