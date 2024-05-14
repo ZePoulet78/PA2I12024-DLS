@@ -40,12 +40,12 @@ use App\Http\Controllers\CollectController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+Route::post('/admin/user', [UserController::class, 'addUser']);
+Route::get('/admin/users', [UserController::class, 'index']);
 
 
 Route::middleware(['auth:sanctum',checkRole::class . ':0'])->group(function () {
     // Users
-    Route::post('/admin/user', [UserController::class, 'addUser']);
-    Route::get('/admin/users', [UserController::class, 'index']);
     Route::get('/admin/user/{user}', [UserController::class, 'show']);
     Route::delete('/admin/user/{user}', [UserController::class, 'destroy']);
     Route::patch('/admin/user/{user}', [UserController::class, 'update']);

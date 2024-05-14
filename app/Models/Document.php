@@ -15,4 +15,10 @@ class Document extends Model
         'title',
         'user_id'
     ];
+
+    public function user(){
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    
 }

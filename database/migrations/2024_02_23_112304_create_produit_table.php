@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('produit', function (Blueprint $table) {
+        Schema::create('warehouses', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->integer('quantity');
-            $table->date('expiration_date');
-            $table->foreignId('warehouse_id')->constrained('warehouses')->onDelete('cascade');
-            $table->boolean('belongs_to_maraude')->default(false);
+            $table->string('address');
+            $table->integer('actual_capacity');
+            $table->integer('max_capacity');
             $table->timestamps();
         });
     }
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('produit');
+        Schema::dropIfExists('warehouses');
     }
 };
