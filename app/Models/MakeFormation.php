@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class MakeFormation extends Model
 {
-    protected $table = 'make_formation';
+    protected $table = 'make_formations';
 
     protected $fillable = ['user_id', 'formation_id'];
 

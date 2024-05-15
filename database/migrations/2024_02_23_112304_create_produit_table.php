@@ -15,7 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->integer('quantity');
-            $table->date('expiration_date')->format('d/m/Y');
+            $table->date('expiration_date');
+            $table->foreignId('warehouse_id')->constrained('warehouses')->onDelete('cascade');
+            $table->boolean('belongs_to_maraude')->default(false);
             $table->timestamps();
         });
     }

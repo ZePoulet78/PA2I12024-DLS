@@ -6,10 +6,11 @@ use Illuminate\Http\Request;
 use App\Models\Demande;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class RegisterController extends Controller
 {
-    public function resgisterUser(Request $request){
+   public function resgisterUser(Request $request){
 
         $this->validate($request,[
             'role' => 'integer|string',
@@ -17,8 +18,9 @@ class RegisterController extends Controller
             'lastname' => 'required|string|max:255',
             'email' => 'required|string|max:255|unique:users',
             'password' => 'required|string|min:8',
+            'checkPassword' => 'required|same:password',
             'tel' => 'required|string|max:10',
-            'avatar' => 'nullable|string|max:255'
+            'avatar' => 'nullable|file|mimes:jpeg,png,jpg|max:10240',
         ]);
 
         $data = $request->all();
@@ -29,47 +31,56 @@ class RegisterController extends Controller
             return response()->json(['message' => 'email already used'], 409);
         }
 
+        if($data['password'] != $data['checkPassword']){
+            return response()->json(['message' => 'passwords do not match'], 400);
+        }
+        strtoupper($data['lastname']);
         
-        $user = new Demande();
+        ucfirst($data['firstname']);
+
+        $user = new User();
         $user->role = $data['role'];
         $user->firstname = $data['firstname'];
         $user->lastname = $data['lastname'];
         $user->email = $data['email'];
         $user->password = Hash::make($data['password']);
         $user->tel = $data['tel'];
-        $user->avatar = $data['avatar'];
+        $user->avatar = $data['avatar'] ?? null;
+
+        $user->isRegistered = 0;
+
         $user->save();
         
-        return response()->json(['message' => 'demand to create acount sent successfully', 'data' => $user], 201);
-    }
 
-    public function approveUser(Request $request, $id){
-
-        $demande = Demande::find($id);
-        if (!$demande) {
-            return response()->json(['message' => 'Demand not found'], 404);
+        if ($request->hasFile('avatar')) {
+            $avatarPath = $request->file('avatar')->store('uploads/avatar/' . (string)$user->id, 's3');
+            $user->avatar = Storage::disk('s3')->url($avatarPath);
         }
 
-        $userD = [
-            'role' => $demande->role,
-            'firstname' => $demande->firstname,
-            'lastname' => $demande->lastname,
-            'email' => $demande->email,
-            'password' => $demande->password, 
-            'tel' => $demande->tel,
-            'avatar' => $demande->avatar,
-        ];
+        return response()->json(['message' => 'demand to create acount sent successfully', 'data' => $user], 201);
+    }
+ 
+    public function approveUser(Request $request, $id)
+    {
+        $user = User::find($id);
     
-        $user = User::create($userD);
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+    
+        $user->isRegistered = 1;
+        $user->save();
     
         return response()->json(['message' => 'User approved successfully', 'data' => $user], 200);
-        $demande->delete();
+
+
+
 
     }
 
     public function rejectUser(Request $request, $demandeId){
     
-        $demande = Demande::find($demandeId);
+        $demande = User::find($demandeId);
 
         if (!$demande) {
             return response()->json(['message' => 'Demand not found'], 404);
@@ -83,26 +94,22 @@ class RegisterController extends Controller
 
 
     public function indexRegister(){
-        $users = Demande::all();
-
+        $users = User::where('isRegistered', 0)->get();
         if (!$users) {
             return response()->json(['message' => 'Demands not found'], 404);
         }
 
         return response()->json(['user' => $users]);
-}
+    }
 
     public function showRegister($id){
         
-        $user = Demande::find($id);
+        $user = User::find($id);
 
         if (!$user) {
             return response()->json(['message' => 'Demand not found'], 404);
         }
         return response()->json(['user' => $user]);
-}
+    }
 
 }
-
-
-    

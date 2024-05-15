@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -28,6 +29,7 @@ class UserController extends Controller
             return response()->json(['message' => 'User already exists'], 409);
         }
 
+
         
         $user = new User();
         $user->role = $data['role'];
@@ -36,12 +38,12 @@ class UserController extends Controller
         $user->email = $data['email'];
         $user->password = Hash::make($data['password']);
         $user->tel = $data['tel'];
+        $user->isRegistered = 1;
         $user->save();
-        
+
         return response()->json(['message' => 'user created successfully', 'data' => $user], 201);
     }
 
-    // fonction pour voir listé les users
 
     public function index()
     {
@@ -52,7 +54,6 @@ class UserController extends Controller
         }
 
         return response()->json(['users' => $users]);
-        //return view('welcome', ['users' => $users]);
     }
 
     public function show($id)
@@ -62,10 +63,11 @@ class UserController extends Controller
         if (!$user) {
             return response()->json(['message' => 'User not found'], 404);
         }
-        return response()->json(['user' => $user]);
+        return response()->json([
+            'user' => $user,
+            'roles'=> $user->roles
+        ]);
     }
-
-    //fonction de modification
 
     public function update(Request $request, $id){
 
@@ -79,19 +81,21 @@ class UserController extends Controller
             'role' => 'required|integer',
             'firstname' => 'required|string|max:255',
             'lastname' => 'required|string|max:255',
-            'email' => 'required|string|max:255|unique:users',
-            'password' => 'required|string|min:8',
-            'tel' => 'required|string|max:10',
+            'email' => 'required|string|max:255',
+            'tel' => 'required|string|min:10|max:10',
         ]);
 
         $data = $request->all();
+
+        if ($new->email !== $data['email'] && User::where('email', $data['email'])->exists()) {
+            return response()->json(['message' => 'Email already in use'], 422);
+        }
     
         $new->fill([
             'role' => $data['role'],
             'firstname' => $data['firstname'],
             'lastname' => $data['lastname'],
             'email' => $data['email'],
-            'password' => Hash::make($data['password']),
             'tel' => $data['tel']
         ]);
         
@@ -147,12 +151,32 @@ class UserController extends Controller
 
         return response()->json(['message' => 'User deleted successfully'], 201);
     }
+    
+    public function getUserRole($id)
+    {
+        $user = User::find($id);
 
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
 
+        return response()->json(['roles' => $user->roles]);
+    }
 
+    
+    public function getAuthUser()
+    {
+        return response()->json(['user' => Auth::user()]);
+    }
 
+    public function getAythUserRoles()
+    {
+        
+        if (!Auth::user()->roles) {
+            return response()->json(['roles' => []]);
+        }
 
-
-
+        return response()->json(['roles' => Auth::user()->roles]);
+    }
 
 }

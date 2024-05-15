@@ -14,6 +14,17 @@ class Produit extends Model
     protected $fillable = [
         'name',
         'quantity',
-        'expiration_date'
+        'expiration_date',
+        'warehouse_id',
     ];
+
+    public function entrepot()
+    {
+        return $this->belongsTo(Entrepot::class, 'warehouse_id');
+    }
+
+    public function maraudes()
+    {
+        return $this->belongsToMany(Maraude::class, 'maraude_produit', 'produit_id', 'maraude_id')->withPivot('quantity');
+    }
 }

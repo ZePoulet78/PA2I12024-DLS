@@ -16,5 +16,13 @@ class Activity extends Model
         'date',
         'type',
         'description',
+        'user_id'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
+
+// ajouter l'user id

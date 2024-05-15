@@ -16,8 +16,8 @@ use App\Http\Controllers\ShowController;
 |
 */
 
-Route::get('/', function () {
-    return view('layout');
-});
+// Route::get('/', function () {
+//     return view('layout');
+// });
 //Route::get('/', [UserController::class, 'index'])->name('welcome');
 //Route::get('/', [ShowController::class, 'index'])->name('welcome');
