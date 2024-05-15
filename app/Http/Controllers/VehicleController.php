@@ -18,6 +18,7 @@ class VehicleController extends Controller
     public function show($id)
     {
         $vehicle = Vehicle::findOrFail($id);
+
         return response()->json($vehicle);
     }
 

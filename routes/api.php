@@ -151,9 +151,12 @@ Route::middleware(['auth:sanctum', checkRole::class . ':0,1'])->group(function (
     Route::get('/formations/{id}', [FormationController::class, 'show']);
 
     //Faire Activité
-    Route::post('/makeActivity', [MakeActivityController::class, 'makeActivity']);
-    Route::get('/makeActivity', [MakeActivityController::class, 'indexMa']);
-    Route::get('/makeActivity/{id}', [MakeActivityController::class, 'GetUsersIdByActivityId']);
+    Route::post('/makeactivity', [MakeActivityController::class, 'makeActivity']);
+    Route::get('/makeactivity', [MakeActivityController::class, 'indexMa']);
+    Route::get('/makeactivity/{id}', [MakeActivityController::class, 'GetUsersIdByActivityId']);
+    Route::get('/makeactivity/user/{id}', [MakeActivityController::class, 'GetActivityIdByUserId']);
+    Route::delete('/undoactivity/{id}', [MakeActivityController::class, 'delete']);
+
 
     // Faire formation
     Route::post('/makeFormation', [MakeFormationController::class, 'makeFormation']);
@@ -185,6 +188,13 @@ Route::middleware(['auth:sanctum', checkRole::class . ':0,1'])->group(function (
 
     // Voir collectes du camionneur
     Route::get('/user/{id}/collects', [CollectController::class, 'getUsersCollects']);
+
+    Route::post('/act', [ActivityController::class, 'addActivity']);
+    Route::get('/act', [ActivityController::class, 'indexA']);
+    Route::get('/act/{id}', [ActivityController::class, 'showA']);
+    Route::delete('/act/{id}', [ActivityController::class, 'destroyA']);
+    Route::patch('/act/{id}', [ActivityController::class, 'updateA']);
+
 
 
 });
@@ -229,12 +239,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::middleware(['auth:sanctum', checkRole::class . ':0,2'])->group(function () {
     // Activity
-    Route::post('/act', [ActivityController::class, 'addActivity']);
-    Route::get('/act', [ActivityController::class, 'indexA']);
-    Route::get('/act/{id}', [ActivityController::class, 'showA']);
-    Route::delete('/act/{id}', [ActivityController::class, 'destroyA']);
-    Route::patch('/act/{id}', [ActivityController::class, 'updateA']);
-
 
 });
 
