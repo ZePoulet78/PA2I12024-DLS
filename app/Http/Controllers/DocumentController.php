@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use App\Models\Document;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class DocumentController extends Controller
 {
@@ -29,11 +30,12 @@ class DocumentController extends Controller
             $filePath = 'uploads/proofs/' . $userId . '/' . $fileName;
 
             Storage::disk('s3')->putFileAs('uploads/proofs/' . $userId, $file, $fileName, 'public');
+            
 
             $document = new Document();
             $document->user_id = $userId;
             $document->title = $request->title;
-            $document->document = $filePath;
+            $document->document = Storage::disk('s3')->url($filePath);
             $document->save();
 
             return response()->json(['success' => 'File uploaded successfully']);
@@ -42,14 +44,9 @@ class DocumentController extends Controller
         return response()->json(['error' => 'No file uploaded or invalid file']);
     }
 
-    public function delete(Request $request){
-        $userId = Auth::id();
+    public function delete($id){
 
-        if (!$userId) {
-            return response()->json(['error' => 'User not authenticated'], 401);
-        }
-
-        $document = Document::where('user_id', $userId)->where('id', $request->id)->first();
+        $document = Document::findOrFail($id);
 
         if (!$document) {
             return response()->json(['error' => 'Document not found'], 404);
@@ -72,6 +69,6 @@ class DocumentController extends Controller
         $documents = Document::where('user_id', $userId)->get();
 
 
-        return response()->json($documents);
+        return response()->json(['documents'=>$documents]);
     }
 }

@@ -137,6 +137,9 @@ Route::middleware(['auth:sanctum', checkRole::class . ':0,1'])->group(function (
     Route::delete('/attachments/{id}', [AttachmentController::class, 'delete']);
     Route::get('/attachments/{id}', [AttachmentController::class, 'show']);
 
+
+    Route::get('/admin/document/{id}', [DocumentController::class, 'list']);
+
     // Stock
     // Route::post('/stock', [StockController::class, 'addProduct']);
     // Route::get('/stock/{id}', [StockController::class, 'showP']);
@@ -219,7 +222,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [LoginController::class, 'logout']);
     Route::get('/user', [UserController::class, 'getCurrentUser']);
     Route::post('/document/upload', [DocumentController::class, 'upload']);
-    Route::delete('/document/delete', [DocumentController::class, 'delete']);
+    Route::delete('/document/user/{id}', [DocumentController::class, 'delete']);
 
 
 });
