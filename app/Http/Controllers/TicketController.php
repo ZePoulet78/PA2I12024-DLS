@@ -113,6 +113,20 @@ class TicketController extends Controller
             'user' => $user]);
     }
 
+        public function getTicketByAuthUser()
+    {
+        $user = Auth::user();
+
+        $tickets = $user->tickets()->get();
+
+        if(!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        return response()->json(['tickets' => $tickets,
+            'user' => $user]);
+    }
+
     public function getTicketByCategory($category_id)
     {
         $tickets = Ticket::where('ticket_category_id', $category_id)->get();

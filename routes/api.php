@@ -140,6 +140,7 @@ Route::middleware(['auth:sanctum', checkRole::class . ':0,1'])->group(function (
     // Tickets
     Route::post('/tickets', [TicketController::class, 'store']);
     Route::get('/user/tickets/{id}', [TicketController::class, 'getTicketByUser']);
+    Route::get('/user/mytickets', [TicketController::class, 'getTicketByAuthUser']);
     Route::delete('/user/tickets/{id}', [TicketController::class, 'destroyUserTickets']);
 
     // Comments
