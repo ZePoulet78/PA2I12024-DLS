@@ -92,6 +92,12 @@ class MakeMaraudeController extends Controller
             return response()->json(['message' => 'User not found'], 404);
         }
 
+
+        foreach ($maraudes as $maraude) {
+            $maraude->maraude = Maraude::find($maraude->maraude_id);
+        }
+
+
         return response()->json(['maraudes' => $maraudes]);
     }
 }
