@@ -14,7 +14,7 @@ class TicketController extends Controller
     {        
         $tickets = Ticket::all();
 
-        // get the user for each ticket in json format
+    
         $ticketsWithUser = $tickets->map(function($ticket) {
             $user = User::find($ticket->user_id);
             return [

@@ -105,6 +105,40 @@ class UserController extends Controller
 
     }
 
+    public function updateAdmin(Request $request, $id){
+
+        $new = User::find($id);
+
+        if(!$new){
+            return response()->json(['message' => 'User not found', 404]);
+        }
+
+        $this->validate($request, [
+            'role' => 'required|integer',
+            'firstname' => 'required|string|max:255',
+            'lastname' => 'required|string|max:255',
+            'email' => 'required|string|max:255',
+            'password' => 'required|string|min:8',
+            'tel' => 'required|string|max:10',
+        ]);
+
+        $data = $request->all();
+    
+        $new->fill([
+            'role' => $data['role'],
+            'firstname' => $data['firstname'],
+            'lastname' => $data['lastname'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+            'tel' => $data['tel']
+        ]);
+        
+        $new->save();
+    
+        return response()->json(['message' => 'User modified successfully', 'data' => $data], 201);
+
+    }
+
     public function destroy(Request $request, $id)
     {
         $user = User::find($id);

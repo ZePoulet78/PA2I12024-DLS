@@ -28,6 +28,8 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\CollectController;
+use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\ServiceBenevolatController;
 
 
 /*
@@ -118,6 +120,16 @@ Route::middleware(['auth:sanctum',checkRole::class . ':0'])->group(function () {
     // addRoutePlan
     Route::put('/collect/{id}/route', [CollectController::class, 'addRoutePlan']);
 
+    //service
+    // Route::post('/services', [ServiceController::class, 'store']);
+   
+    // Route::get('/services/{id}', [ServiceController::class, 'show']);
+    // Route::put('/services/{id}', [ServiceController::class, 'update']);
+    // Route::delete('/services/{id}', [ServiceController::class, 'delete']);
+
+    Route::delete('/services/{id}', [ServiceController::class, 'delete']);
+    Route::post('/services', [ServiceController::class, 'store']);
+    Route::patch('/services/{id}', [ServiceController::class, 'update']);
     // addRoutePlan
     Route::put('/maraude/{id}/route', [MaraudeController::class, 'addRoutePlan']);
 
@@ -192,6 +204,11 @@ Route::middleware(['auth:sanctum', checkRole::class . ':0,1'])->group(function (
     // Voir collectes du camionneur
     Route::get('/user/{id}/collects', [CollectController::class, 'getUsersCollects']);
 
+    Route::put('/volunteering/join/{id}', [ServiceBenevolatController::class, 'joinVolunteering']);
+    Route::get('/volunteering', [ServiceBenevolatController::class, 'index']);  
+    Route::put('/volunteering/leave/{id}', [ServiceBenevolatController::class, 'leaveVolunteering']);
+    Route::get('/volunteering/volunteer', [ServiceBenevolatController::class, 'getVolunteerServices']);
+    
     Route::post('/act', [ActivityController::class, 'addActivity']);
     Route::get('/act', [ActivityController::class, 'indexA']);
     Route::get('/act/{id}', [ActivityController::class, 'showA']);
@@ -229,6 +246,8 @@ Route::middleware(['auth:sanctum', CheckItRole::class])->group(function () {
 
 
 
+
+
 });
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -242,6 +261,33 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::middleware(['auth:sanctum', checkRole::class . ':0,2'])->group(function () {
     // Activity
+    Route::post('/act', [ActivityController::class, 'addActivity']);
+    Route::get('/act', [ActivityController::class, 'indexA']);
+    Route::get('/act/{id}', [ActivityController::class, 'showA']);
+    Route::delete('/act/{id}', [ActivityController::class, 'destroyA']);
+    Route::patch('/act/{id}', [ActivityController::class, 'updateA']);
+
+    //service benevolat    
+    //Route::get('/volunteering', [ServiceBenevolatController::class, 'index']);  
+    // Route::get('/volunteering/{id}', [ServiceBenevolatController::class, 'show']);
+
+    Route::get('/volunteering/user', [ServiceBenevolatController::class, 'getVolunteeringsByUser']);
+    Route::get('/volunteering/{id}', [ServiceBenevolatController::class, 'show']);
+    Route::post('/volunteering', [ServiceBenevolatController::class, 'addVolunteering']);
+    Route::patch('/volunteering/{id}', [ServiceBenevolatController::class, 'update']);
+    Route::delete('/volunteering/{id}', [ServiceBenevolatController::class, 'destroy']);
+
+
+
+
+
+
+    Route::get('/services', [ServiceController::class, 'index']);
+    Route::get('/services/{id}', [ServiceController::class, 'show']);
+
+
+    
+
 
 });
 
@@ -257,6 +303,30 @@ Route::post('/login', [LoginController::class, 'login']);
 Route::post('/donations', [DonationController::class, 'createDonation'])->name('donations.create');
 Route::get('/donations/success', [DonationController::class, 'handleSuccessfulDonation'])->name('donations.success');
 Route::get('/donations/cancel', [DonationController::class, 'handleCancelledDonation'])->name('donations.cancel');
+
+
+
+Route::post('/create-payment-intent', function (Request $request) {
+    \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+
+    $paymentIntent = \Stripe\PaymentIntent::create([
+        'amount' => $request->input('amount') * 100, // Montant en centimes
+        'currency' => 'eur',
+        'metadata' => [
+            'order_id' => $request->input('order_id'),
+        ],
+    ]);
+
+    return response()->json(['client_secret' => $paymentIntent->client_secret]);
+});
+
+Route::get('/payment-status/{id}', function ($id) {
+    \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+
+    $paymentIntent = \Stripe\PaymentIntent::retrieve($id);
+
+    return response()->json(['status' => $paymentIntent->status]);
+});
 
 
 
