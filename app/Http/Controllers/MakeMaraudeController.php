@@ -16,7 +16,7 @@ class MakeMaraudeController extends Controller
     {
         $request->validate([
             'user_id' => 'required|exists:users,id',
-            'maraude_id' => 'required|exists:maraudes,id|unique:make_maraudes,maraude_id,NULL,id,user_id,' . $request->user_id,
+            'maraude_id' => 'required|exists:maraude,id|unique:make_maraudes,maraude_id,NULL,id,user_id,' . $request->user_id,
         ]);
 
         $maraude = Maraude::findOrFail($request->maraude_id);
@@ -37,12 +37,12 @@ class MakeMaraudeController extends Controller
             ->first();
 
 
-        $conflictingMakeMaraude = MakeMaraude::join('maraudes', 'make_maraudes.maraude_id', '=', 'maraudes.id')
+        $conflictingMakeMaraude = MakeMaraude::join('maraude', 'make_maraudes.maraude_id', '=', 'maraude.id')
             ->where('make_maraudes.user_id', $request->user_id)
-            ->where('maraudes.maraud_date', $maraude->maraud_date)
+            ->where('maraude.maraud_date', $maraude->maraud_date)
             ->where(function ($query) use ($maraude) {
-                $query->where('maraudes.departure_time', '<', $maraude->return_time)
-                    ->where('maraudes.return_time', '>', $maraude->departure_time);
+                $query->where('maraude.departure_time', '<', $maraude->return_time)
+                    ->where('maraude.return_time', '>', $maraude->departure_time);
             })
             ->first();
 
@@ -92,6 +92,38 @@ class MakeMaraudeController extends Controller
             return response()->json(['message' => 'User not found'], 404);
         }
 
+
+        foreach ($maraudes as $maraude) {
+            $maraude->maraude = Maraude::find($maraude->maraude_id);
+        }
+
+
         return response()->json(['maraudes' => $maraudes]);
     }
+
+
+    public function destroy($user_id, $maraude_id)
+    {
+        $makeMaraude = MakeMaraude::where('user_id', $user_id)->where('maraude_id', $maraude_id)->first();
+
+        if (!$makeMaraude) {
+            return response()->json(['message' => 'Maraude non trouvée'], 404);
+        }
+
+        $makeMaraude->delete();
+
+        return response()->json(['message' => 'Désinscrit avec succès'], 201);
+    }
+
+    public function checkUserMaraude($user_id, $maraude_id)
+    {
+        $makeMaraude = MakeMaraude::where('user_id', $user_id)->where('maraude_id', $maraude_id)->first();
+
+        if ($makeMaraude) {
+            return response()->json(['message' => true], 200);
+        }
+
+        return response()->json(['message' => false], 404);
+    }
+    
 }
