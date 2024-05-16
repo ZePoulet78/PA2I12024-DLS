@@ -11,15 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('maraude', function (Blueprint $table) {
-            $table->id();
-            $table->date('maraud_date');
-            $table->time('departure_time');
-            $table->time('return_time');
-            $table->string('itinerary');
-            $table->foreignId('vehicle_id')->constrained()->onDelete('cascade');
+        Schema::table('maraude', function (Blueprint $table) {
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->timestamps();
         });
     }
 
@@ -28,6 +21,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('maraude');
+        Schema::table('maraude', function (Blueprint $table) {
+            $table->dropForeign(['user_id']);
+            $table->dropColumn('user_id');
+        });
     }
 };

@@ -13,7 +13,7 @@ class MakeActivityController extends Controller
     {
         $request->validate([
             'user_id' => 'required|exists:users,id',
-            'activity_id' => 'required|exists:activity,id|unique:make_activity,activity_id,NULL,id,user_id,' . $request->user_id,
+            'activity_id' => 'required|exists:activity,id',
         ]);
 
         $newActivity = Activity::findOrFail($request->activity_id);
@@ -35,12 +35,20 @@ class MakeActivityController extends Controller
 
 
         if ($conflictingActivity || $conflictingFormation ) {
-            return response()->json(['error' => 'L\'utilisateur a déjà une activité ou une formation prévue à la même date et heure'], 400);
+            return response()->json(['error' => "L'utilisateur a déjà une activité ou une formation prévue à la même date et heure"], 400);
         }
+
+        if($newActivity->actual_users >= $newActivity->max_users){
+            return response()->json(['error' => "L'activité est déjà pleine"], 400);
+        }
+
+        $newActivity->actual_users += 1;
+
+        $newActivity->save();
 
         $makeActivity = MakeActivity::create($request->all());
 
-        return response()->json(['message' => 'MakeActivity créée avec succès', 'data' => $makeActivity], 201);
+        return response()->json(['message' => 'Activité rejointe avec succès', 'data' => $makeActivity], 201);
     }
 
     public function indexMa()
@@ -83,6 +91,31 @@ class MakeActivityController extends Controller
             return response()->json(['message' => 'activity not found'], 404);
         }
 
+        foreach ($activities as $activity) {
+            $activity->activity = Activity::find($activity->activity_id);
+        }
+
         return response()->json(['activity' => $activities]);
+    }
+
+    public function delete($id)
+    {
+        $act = MakeActivity::find($id);
+        
+        
+
+        if (!$act) {
+            return response()->json(['message' => 'activity not found'], 404);
+        }
+
+        $activity = Activity::find($act->activity_id);
+
+        $activity->actual_users -= 1;
+
+        $activity->save();
+
+        $act->delete();
+
+        return response()->json(['message' => 'activity deleted successfully'], 200);
     }
 }

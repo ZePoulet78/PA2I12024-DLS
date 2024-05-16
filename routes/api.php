@@ -130,6 +130,8 @@ Route::middleware(['auth:sanctum',checkRole::class . ':0'])->group(function () {
     Route::delete('/services/{id}', [ServiceController::class, 'delete']);
     Route::post('/services', [ServiceController::class, 'store']);
     Route::patch('/services/{id}', [ServiceController::class, 'update']);
+    // addRoutePlan
+    Route::put('/maraude/{id}/route', [MaraudeController::class, 'addRoutePlan']);
 
 });
 
@@ -164,9 +166,12 @@ Route::middleware(['auth:sanctum', checkRole::class . ':0,1'])->group(function (
     Route::get('/formations/{id}', [FormationController::class, 'show']);
 
     //Faire Activité
-    Route::post('/makeActivity', [MakeActivityController::class, 'makeActivity']);
-    Route::get('/makeActivity', [MakeActivityController::class, 'indexMa']);
-    Route::get('/makeActivity/{id}', [MakeActivityController::class, 'GetUsersIdByActivityId']);
+    Route::post('/makeactivity', [MakeActivityController::class, 'makeActivity']);
+    Route::get('/makeactivity', [MakeActivityController::class, 'indexMa']);
+    Route::get('/makeactivity/{id}', [MakeActivityController::class, 'GetUsersIdByActivityId']);
+    Route::get('/makeactivity/user/{id}', [MakeActivityController::class, 'GetActivityIdByUserId']);
+    Route::delete('/undoactivity/{id}', [MakeActivityController::class, 'delete']);
+
 
     // Faire formation
     Route::post('/makeFormation', [MakeFormationController::class, 'makeFormation']);
@@ -203,6 +208,14 @@ Route::middleware(['auth:sanctum', checkRole::class . ':0,1'])->group(function (
     Route::get('/volunteering', [ServiceBenevolatController::class, 'index']);  
     Route::put('/volunteering/leave/{id}', [ServiceBenevolatController::class, 'leaveVolunteering']);
     Route::get('/volunteering/volunteer', [ServiceBenevolatController::class, 'getVolunteerServices']);
+    
+    Route::post('/act', [ActivityController::class, 'addActivity']);
+    Route::get('/act', [ActivityController::class, 'indexA']);
+    Route::get('/act/{id}', [ActivityController::class, 'showA']);
+    Route::delete('/act/{id}', [ActivityController::class, 'destroyA']);
+    Route::patch('/act/{id}', [ActivityController::class, 'updateA']);
+
+
 
 });
 

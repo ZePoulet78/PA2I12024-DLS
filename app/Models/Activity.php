@@ -16,13 +16,19 @@ class Activity extends Model
         'date',
         'type',
         'description',
-        'user_id'
+        'user_id',
+        'lieu',
+        'max_users',
+        'actual_users'
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
-}
 
-// ajouter l'user id
+    public function makeActivity()
+    {
+        return $this->hasMany(MakeActivity::class);
+    }
+}

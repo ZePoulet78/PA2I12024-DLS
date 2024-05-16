@@ -23,6 +23,8 @@ class ActivityController extends Controller
             'date' => 'required|date_format:Y-m-d',
             'type' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'lieu' => 'required|string',
+            'max_users' => 'required|integer',
         ]);
 
         $data = $request->all();
@@ -40,7 +42,10 @@ class ActivityController extends Controller
         $act->date = $data['date'];
         $act->type = $data['type'];
         $act->description = $data['description'];
-        $act->user_id = $user->id;;
+        $act->user_id = $user->id;
+        $act->lieu = $data['lieu'];
+        $act->max_users = $data['max_users'];
+        $act->actual_users = 0;
         $act->save();
     
         return response()->json(['message' => 'Activity created successfully', 'activity' => $act], 201);
@@ -68,7 +73,6 @@ class ActivityController extends Controller
         return response()->json(['activity' => $act]);
     }
 
- 
 
     public function updateA(Request $request, $id)
     {
@@ -79,24 +83,32 @@ class ActivityController extends Controller
         }
     
         $this->validate($request, [
-            'heure_debut' => 'required|date_format:H:i:s',
-            'heure_fin' => 'required|date_format:H:i:s|after:heure_debut',
-            'date' => 'required|date_format:Y-m-d',
+            'heure_debut' => 'required|date_format:H:i',
+            'heure_fin' => 'required|date_format:H:i|after:heure_debut',
+            'date' => 'required|date_format:Y-m-d|after:today',
             'type' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'lieu' => 'required|string',
+            'max_users' => 'required|integer',
         ]);
 
+        // $today = Carbon::today()->format('Y-m-d');
+        // if ($request->date < $today) {
+        //     return response()->json(['message' => 'La date de l\'activité ne peut pas être antérieure à aujourd\'hui.'], 400);
+        // }
     
         $data = $request->all();
-        $heureDebut = Carbon::parse($data['heure_debut'])->format('H:i');
-        $heureFin = Carbon::parse($data['heure_fin'])->format('H:i');
+        $heureDebut = Carbon::parse($data['heure_debut'])->format('H:i:s');
+        $heureFin = Carbon::parse($data['heure_fin'])->format('H:i:s');
     
         $new->fill([
             'heure_debut' => $heureDebut,
             'heure_fin' => $heureFin,
             'date' => $data['date'],
             'type' => $data['type'],
-            'description' => $data['description']
+            'description' => $data['description'] ? $data['description'] : $new->description,
+            'lieu' => $data['lieu'],
+            'max_users' => $data['max_users'],
         ]);
     
         $new->save();

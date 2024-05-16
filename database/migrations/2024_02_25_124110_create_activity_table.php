@@ -19,6 +19,9 @@ return new class extends Migration
             $table->date('date');
             $table->string('type');
             $table->text('description')->nullable();
+            $table->string('lieu');
+            $table->integer('max_users');
+            $table->integer('actual_users');
             $table->timestamps(); 
         });
     }
