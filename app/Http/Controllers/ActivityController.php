@@ -68,7 +68,7 @@ class ActivityController extends Controller
         return response()->json(['activity' => $act]);
     }
 
-    //fonction de modification
+ 
 
     public function updateA(Request $request, $id)
     {
@@ -86,10 +86,6 @@ class ActivityController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        // $today = Carbon::today()->format('Y-m-d');
-        // if ($data['date'] < $today) {
-        //     return response()->json(['message' => 'La date de l\'activité ne peut pas être antérieure à aujourd\'hui.'], 400);
-        // }
     
         $data = $request->all();
         $heureDebut = Carbon::parse($data['heure_debut'])->format('H:i');
