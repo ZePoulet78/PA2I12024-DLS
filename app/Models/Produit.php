@@ -16,12 +16,12 @@ class Produit extends Model
         'quantity',
         'expiration_date',
         'warehouse_id',
-        
+
     ];
 
     public function entrepot()
     {
-        return $this->belongsTo(Entrepot::class, 'warehouse_id');
+        return $this->belongsTo(Warehouse::class, 'warehouse_id');
     }
 
     public function maraudes()
