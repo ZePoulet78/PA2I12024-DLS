@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Carbon\Carbon;
 use App\Models\Vehicle;
-
+use App\Models\Maraude;
 
 class CollectController extends Controller
 {
@@ -67,7 +67,22 @@ class CollectController extends Controller
         }
 
 
+        $maraude = Maraude::where('user_id', $request->id_user)
+            ->where('maraud_date', $request->date)
+            ->first();
 
+        if ($maraude) {
+            return response()->json(['message' => 'Le chauffeur a déjà une maraude prévue ce jour'], 400);
+        }
+
+        $maraude = Maraude::where('vehicle_id', $request->id_vehicule)
+            ->where('maraud_date', $request->date)
+            ->first();
+
+
+        if ($maraude) {
+            return response()->json(['message' => 'Le véhicule a déjà une maraude prévue ce jour'], 400);
+        }
         
         $collect = new Collect();
         $collect->date = $request->date;
