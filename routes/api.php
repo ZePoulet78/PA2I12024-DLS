@@ -16,6 +16,7 @@ use App\Http\Controllers\MakeActivityController;
 use App\Http\Controllers\MakeFormationController;
 use App\Http\Controllers\EntrepotController;
 use App\Http\Controllers\MaraudeProductController;
+use App\Http\Controllers\MakeMaraudeController;
 
 
 use App\Http\Controllers\DocumentController;
@@ -104,7 +105,6 @@ Route::middleware(['auth:sanctum',checkRole::class . ':0'])->group(function () {
     Route::delete('/maraude/prod/{maraudeId}/{productId}', [MaraudeProductController::class, 'removeProductFromMaraude']);
 
     // Maraude
-    Route::get('/maraudes', [MaraudeController::class, 'index']);
     Route::post('/maraudes', [MaraudeController::class, 'store']);
     Route::get('/maraudes/{id}', [MaraudeController::class, 'show']);
     Route::patch('/maraudes/{id}', [MaraudeController::class, 'update']);
@@ -161,6 +161,10 @@ Route::middleware(['auth:sanctum', checkRole::class . ':0,1'])->group(function (
     // Route::delete('/stock/{id}', [StockController::class, 'destroyP']);
     // Route::patch('/stock/{id}', [StockController::class, 'updateP']);
 
+    Route::get('/maraudes', [MaraudeController::class, 'index']);
+    // public function getMaraudesByUserId($user_id)
+    Route::get('/maraudes/user/{id}', [MakeMaraudeController::class, 'getMaraudesByUserId']);
+
     // Formation
     Route::get('/formations', [FormationController::class, 'index']);
     Route::get('/formations/{id}', [FormationController::class, 'show']);
@@ -172,6 +176,14 @@ Route::middleware(['auth:sanctum', checkRole::class . ':0,1'])->group(function (
     Route::get('/makeactivity/user/{id}', [MakeActivityController::class, 'GetActivityIdByUserId']);
     Route::delete('/undoactivity/{id}', [MakeActivityController::class, 'delete']);
 
+
+    //Faire Maraude
+    Route::post('/makemaraude', [MakeMaraudeController::class, 'makeMaraude']);
+    Route::get('/makemaraude', [MakeMaraudeController::class, 'index']);
+    Route::get('/makemaraude/{id}', [MakeMaraudeController::class, 'show']);
+
+    Route::get('/makemaraude/{user_id}/{maraude_id}', [MakeMaraudeController::class, 'checkUserMaraude']);
+    Route::delete('/makemaraude/{user_id}/{maraude_id}', [MakeMaraudeController::class, 'destroy']);
 
     // Faire formation
     Route::post('/makeFormation', [MakeFormationController::class, 'makeFormation']);
