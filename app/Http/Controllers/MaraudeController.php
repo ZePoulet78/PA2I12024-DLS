@@ -142,4 +142,19 @@ class MaraudeController extends Controller
         return response()->json(['maraudes' => $maraudes]);
     }
 
+    
+    public function addRoutePlan($id, Request $request)
+    {
+        $maraude = Maraude::findOrFail($id);
+
+        $this->validate($request, [
+            'itinerary' => 'required|string'
+        ]);
+
+        $maraude->itinerary = $request->itinerary;
+        $maraude->save();
+
+
+        return response()->json(['maraude' => $maraude], 200);
+    } 
 }

@@ -42,11 +42,10 @@ class MaraudeProductController extends Controller
         $prod->belongs_to_maraude = true;
         $prod->save();
 
-
         $warehouse->actual_capacity += $data['quantity'];
         $warehouse->save();
 
-        $maraude->produits()->attach($produit->id, ['quantity' => $data['quantity']]);
+        $maraude->produits()->attach($prod->id, ['quantity' => $data['quantity']]);
 
         return response()->json(['message' => 'Produit ajouté à la maraude avec succès'], 201);
     }
@@ -92,7 +91,7 @@ public function GetProductFromMaraude(Request $request, $maraudeId,)
     $maraude = Maraude::findOrFail($maraudeId);
     $produits = $maraude->produits;
 
-    return response()->json($produits);
+    return response()->json(['prod'=>$produits]);
 }
 
 }

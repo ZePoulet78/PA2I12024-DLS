@@ -16,6 +16,7 @@ class Produit extends Model
         'quantity',
         'expiration_date',
         'warehouse_id',
+        
     ];
 
     public function entrepot()

@@ -118,6 +118,9 @@ Route::middleware(['auth:sanctum',checkRole::class . ':0'])->group(function () {
     // addRoutePlan
     Route::put('/collect/{id}/route', [CollectController::class, 'addRoutePlan']);
 
+    // addRoutePlan
+    Route::put('/maraude/{id}/route', [MaraudeController::class, 'addRoutePlan']);
+
 });
 
 
